@@ -1,5 +1,6 @@
-### GLOBAL CONSTANTS AND IMPORTS
+### GLOBAL CONSTANTS AND IMPORTS #########################################################
 
+# DB connection settings
 DB_HOST = "localhost"
 DB_PORT = 5432
 DB_NAME = "mydb"
@@ -26,8 +27,9 @@ TABLE_MAP = {
 
 }
 
-
+#################################################################################################
 ### Helper functions for parse CSV files to pandas dataframe and convert to SQL insert statements
+#################################################################################################
 
 def parse_csv_file_to_pandas_df(file_path):
     """
@@ -57,8 +59,6 @@ def parse_df_to_SQL_inserts(df, table_name):
 
 
 
-
-
 def connect_to_db():
     """
     Connect to Postgres using settings in DB dict. example usage: conn = connect_to_db()
@@ -71,11 +71,6 @@ def connect_to_db():
     )
     SCHEMA = "baseball_db"
     return psycopg2.connect(**DB)
-
-
-
-
-
 
 
 
