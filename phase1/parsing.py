@@ -73,9 +73,42 @@ def connect_to_db():
     return psycopg2.connect(**DB)
 
 
+def parse_event_file(file_path):
+    """parsing eva and evn files"""
+    insert_statements = []
+    with open(file_path, 'r') as f:
+        for line in f:
+            if line.startswith("info"):
+                #insert_statements.extend(parse_info_line(line))
+                continue  # skipping info lines for now
+            elif line.startswith("id"):
+                insert_statements.extend(parse_id_line(line))
+            elif line.startswith("start") or line.startswith("sub"):
+                insert_statements.extend(parse_start_and_sub_line(line))
+            elif line.startswith("play"):
+                insert_statements.extend(parse_play_line(line))
+            elif line.startswith("com"):
+                insert_statements.extend(parse_com_line(line))
+            elif line.startswith("data"):
+                insert_statements.extend(parse_data_line(line))
+            elif line.startswith("badj"):
+                insert_statements.extend(parse_badj_line(line))
+            elif line.startswith("padj"):
+                insert_statements.extend(parse_padj_line(line))
+            elif line.startswith("ladj"):
+                insert_statements.extend(parse_ladj_line(line))
+            elif line.startswith("radj"):
+                insert_statements.extend(parse_radj_line(line))
+            elif line.startswith("presadj"):
+                insert_statements.extend(parse_presadj_line(line))
+            else:
+                print(f"Unknown line type: {line}")
+
+    return insert_statements
+
 def parse_info_line(line):
     """
-    this is extremely variable, so we will just return the line for now
+    this is extremely variable, so we will just return the line for now.
     """
     pass
 
@@ -87,11 +120,17 @@ def parse_id_line(line):
     next 2 are day
     last number is single game(0), first game(1), or second game(2)
     """
-    pass
+    home_team = line[3:6]
+    year = line[6:10]
+    month = line[10:12]
+    day = line[12:14]
+    game_number = line[14]
+
+    return [f"INSERT INTO Games (id, homeTeam, date) VALUES ('{line[3:]}', '{home_team}', '{year}-{month}-{day}');"]
 def parse_start_and_sub_line(line):
     """
     1. The first field is the Retrosheet player id, which is unique for each player.
-    
+
     2. The second field is the player's name.
 
     3. The next field is either 0 (for visiting team), or 1 (for home team). 
@@ -109,7 +148,12 @@ def parse_start_and_sub_line(line):
         When a player pinch hits or pinch runs for the DH, that player automatically becomes the DH, 
         so no 'sub' record is included to identify the new DH.
     """
-    pass
+    id = line.split(",")[1]
+    name = line.split(",")[2]
+    team = line.split(",")[3]
+    batting_position = line.split(",")[4]
+    fielding_position = line.split(",")[5]
+    return [f"INSERT INTO PlayerActivity (gameId, playerId, team, battingPosition, fieldingPosition) VALUES ('{id}', '{name}', '{team}', {batting_position}, {fielding_position});"]
 
 def parse_play_line(line):
     """
@@ -129,16 +173,26 @@ def parse_play_line(line):
 
     6. The sixth field describes the play or event that occurred.
     """
-    pass
+    parts = line.split(",")
+    inning = parts[1]
+    team = parts[2]
+    batter_id = parts[3]
+    count = parts[4]
+    pitches = parts[5]
+    play = ",".join(parts[6:]).strip()  # in case play contains commas
+
+    return [f"INSERT INTO AtBats (game, inning, top, batter, count, pitches, play) VALUES ('{batter_id}', {inning}, {team}, '{batter_id}', '{count}', '{pitches}', '{play}');"]
 def parse_com_line(line):
     """
+    !!!! NOT CURRENTLY USED !!!!
     The final record type is used primarily to add explanatory information for a play. 
     Although it may occur anywhere in a file, it is usually not present until after the start records. 
     The second field of the com record is quoted.
 
         com,"ML debut for Behenna"
     """
-    pass
+    # COMMENTS?
+    return [f"INSERT INTO Comments (gameId, comment) VALUES ('{line[3:]}', '{line[4:]}');"]
 def parse_data_line(line):
     """
     Data records appear after all records from the game. 
@@ -148,8 +202,12 @@ def parse_data_line(line):
 
         data,er,showe001,2
     """
-    pass
-
+    parts = line.split(",")
+    pitcher_id = parts[2]
+    earned_runs = parts[3]
+    # idk where to put this
+    return [f"INSERT INTO earnedRuns (pitcherId, earnedRuns) VALUES ('{pitcher_id}', {earned_runs});"]
+\
 def parse_badj_line(line):
     """
     batter adjustment
@@ -159,7 +217,10 @@ def parse_badj_line(line):
 
         badj,bonib001,R
     """
-    pass
+    parts = line.split(",")
+    batter_id = parts[1]
+    hand = parts[2]
+    return [f"INSERT INTO badj (batterId, hand) VALUES ('{batter_id}', '{hand}');"]
 def parse_padj_line(line):
     """
     pitcher adjustment
@@ -168,7 +229,11 @@ def parse_padj_line(line):
 
         padj,harrg001,L
     """
-    pass
+    parts = line.split(",")
+    pitcher_id = parts[1]
+    hand = parts[2]
+    return [f"INSERT INTO padj (pitcherId, hand) VALUES ('{pitcher_id}', '{hand}');"]
+
 def parse_ladj_line(line):
     """
     "Lineup adjustment". 
@@ -180,7 +245,10 @@ def parse_ladj_line(line):
 
         ladj,0,4
     """
-    pass
+    parts = line.split(",")
+    team = parts[1]
+    batting_position = parts[2]
+    return [f"INSERT INTO ladj (team, battingPosition) VALUES ('{team}', {batting_position});"]
 def parse_radj_line(line):
     """
     "Runner adjustment". 
@@ -192,7 +260,11 @@ def parse_radj_line(line):
 
         radj,turnj001,2
     """
-    pass
+    
+    parts = line.split(",")
+    runner_id = parts[1]
+    base = parts[2]
+    return [f"INSERT INTO radj (runnerId, base) VALUES ('{runner_id}', {base});"]
 def parse_presadj_line(line):
     """
     "Pitcher responsibility adjustment"
@@ -203,7 +275,11 @@ def parse_presadj_line(line):
         presadj,cicoe001,2
 
     """
-    pass
+    
+    parts = line.split(",")
+    pitcher_id = parts[1]
+    base = parts[2]
+    return [f"INSERT INTO presadj (pitcherId, base) VALUES ('{pitcher_id}', {base});"]
 
 #### -------- #### ---------------------- example usage below ----------------- #### -------- ####
 def main():
