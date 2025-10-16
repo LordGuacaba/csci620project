@@ -29,9 +29,10 @@ def parse_df_to_SQL_inserts(df, table_name):
 # and expected files to parse from data directory
 # this is a simplified example, real schema will be more complex
 TABLE_MAP = {
-    "STADIUMS": ["id", "name", "city", "state", "country"],
-    "TEAMS": ["id", "name", "city", "state", "country"],
-    "PLAYERS": ["id", "name", "team_id", "position", "birthdate"]}
+    "STADIUMS": {"columns": ["id", "name", "city", "state"], "file": "../data/ballparks.csv"},
+    "TEAMS": {"columns": ["id", "name", "city", "first", "last"], "file": "../data/teams.csv"},
+    "PLAYERS": {"columns": ["id", "firstName", "lastName", "battingHandedness", "position", "DOB", "throwingHandedness"], "file": "../data/biofile/biofile.csv"}
+}
 
 
 def connect_to_db():
@@ -51,20 +52,22 @@ def connect_to_db():
 def main():
     """
     example function use and instruction sequence to run this script:
-    1. python (or python3) -m venv venv.    # to create a virtual environment
-    2. source venv/bin/activate             # to activate the virtual environment
-    3. pip install -r requirements.txt      # to install required packages
-    4. python parsing.py                    # to run this script
+    1. python (or python3) -m venv venv.                                # to create a virtual environment
+    2. source venv/bin/activate                                         # to activate the virtual environment
+    3. pip install -r requirements.txt                                  # to install required packages
+    4. python parsing.py                                                # to run this script
     """
-    conn = connect_to_db()
-    file_path = "../data/ballparks.csv"
-    df = parse_csv_file_to_pandas_df(file_path)
-    print(df)
-    sql_inserts = parse_df_to_SQL_inserts(df, "ballparks") 
-    for insert in sql_inserts:
-        print(insert)
+    conn = connect_to_db()                                              # connect to the database
+    cursor = conn.cursor()                                              # create a cursor object to execute SQL commands
 
-
+    for table_name, info in TABLE_MAP.items():                          # for loop to parse each file and insert into corresponding table
+        file_path = info["file"]
+        df = parse_csv_file_to_pandas_df(file_path)
+        sql_inserts = parse_df_to_SQL_inserts(df, table_name) 
+        for insert in sql_inserts:
+            # this is printing for now, but should be executed in real use
+            print(insert)
+            # cursor.execute(insert)
 
 if __name__ == "__main__":
     main()
