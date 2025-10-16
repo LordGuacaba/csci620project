@@ -29,9 +29,18 @@ def parse_df_to_SQL_inserts(df, table_name):
 # and expected files to parse from data directory
 # this is a simplified example, real schema will be more complex
 TABLE_MAP = {
-    "STADIUMS": {"columns": ["id", "name", "city", "state"], "file": "../data/ballparks.csv"},
-    "TEAMS": {"columns": ["id", "name", "city", "first", "last"], "file": "../data/teams.csv"},
-    "PLAYERS": {"columns": ["id", "firstName", "lastName", "battingHandedness", "position", "DOB", "throwingHandedness"], "file": "../data/biofile/biofile.csv"}
+    "Stadiums": {"columns": ["id", "name", "city", "state"], "file": "../data/ballparks.csv"},
+    "Teams": {"columns": ["id", "name", "city", "first", "last"], "file": "../data/teams.csv"},
+    "Players": {"columns": ["id", "firstName", "lastName", "battingHandedness", "position", "DOB", "throwingHandedness"], "file": "../data/biofile/biofile.csv"},
+    # add more tables as needed. files can be added later. It is likely
+    # that we will get mutliple tables from the same file, 
+    # in which case we can map that to a different map and update this to a more
+    # standalone entity map (i.e no FKs)
+    
+    #"AtBats":{"columns":["number", "game", "batter", "inning", "top", "pitches", "play", "playDetails", "baserunnerDetails"], "file": ""},
+    #"Games":{"columns":["id", "homeTeam", "visTeam", "date", "location", "useDH", "htbf", "attendance", "wp", "lp", "save"], "file": ""},
+    #"PlayerActivity":{"columns":["gameId", "playerId", "team", "battingPosition", "fieldingPosition", "inning", "pinchHit", "pinchRun"], "file": ""},
+
 }
 
 
