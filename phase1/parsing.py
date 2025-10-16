@@ -29,9 +29,9 @@ def parse_df_to_SQL_inserts(df, table_name):
 # and expected files to parse from data directory
 # this is a simplified example, real schema will be more complex
 TABLE_MAP = {
-    "ballparks": ["id", "name", "city", "state", "country"],
-    "teams": ["id", "name", "city", "state", "country"],
-    "players": ["id", "name", "team_id", "position", "birthdate"]}
+    "STADIUMS": ["id", "name", "city", "state", "country"],
+    "TEAMS": ["id", "name", "city", "state", "country"],
+    "PLAYERS": ["id", "name", "team_id", "position", "birthdate"]}
 
 
 def connect_to_db():
