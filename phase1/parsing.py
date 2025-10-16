@@ -1,3 +1,34 @@
+### GLOBAL CONSTANTS AND IMPORTS
+
+DB_HOST = "localhost"
+DB_PORT = 5432
+DB_NAME = "mydb"
+DB_USER = "postgres"
+DB_PASSWORD = "postgres"
+DB_SCHEMA = "baseball_db"
+
+
+# going to use this table map to define expected columns for different tables
+# and expected files to parse from data directory
+# this is a simplified example, real schema will be more complex
+TABLE_MAP = {
+    "Stadiums": {"columns": ["id", "name", "city", "state"], "file": "../data/ballparks.csv"},
+    "Teams": {"columns": ["id", "name", "city", "first", "last"], "file": "../data/teams.csv"},
+    "Players": {"columns": ["id", "firstName", "lastName", "battingHandedness", "position", "DOB", "throwingHandedness"], "file": "../data/biofile/biofile.csv"},
+    # add more tables as needed. files can be added later. It is likely
+    # that we will get mutliple tables from the same file, 
+    # in which case we can map that to a different map and update this to a more
+    # standalone entity map (i.e no FKs)
+
+    #"AtBats":{"columns":["number", "game", "batter", "inning", "top", "pitches", "play", "playDetails", "baserunnerDetails"], "file": ""},
+    #"Games":{"columns":["id", "homeTeam", "visTeam", "date", "location", "useDH", "htbf", "attendance", "wp", "lp", "save"], "file": ""},
+    #"PlayerActivity":{"columns":["gameId", "playerId", "team", "battingPosition", "fieldingPosition", "inning", "pinchHit", "pinchRun"], "file": ""},
+
+}
+
+
+### Helper functions for parse CSV files to pandas dataframe and convert to SQL insert statements
+
 def parse_csv_file_to_pandas_df(file_path):
     """
     assume first line is the header, including column names seperated by comma
@@ -25,23 +56,7 @@ def parse_df_to_SQL_inserts(df, table_name):
     return insert_statements
 
 
-# going to use this table map to define expected columns for different tables
-# and expected files to parse from data directory
-# this is a simplified example, real schema will be more complex
-TABLE_MAP = {
-    "Stadiums": {"columns": ["id", "name", "city", "state"], "file": "../data/ballparks.csv"},
-    "Teams": {"columns": ["id", "name", "city", "first", "last"], "file": "../data/teams.csv"},
-    "Players": {"columns": ["id", "firstName", "lastName", "battingHandedness", "position", "DOB", "throwingHandedness"], "file": "../data/biofile/biofile.csv"},
-    # add more tables as needed. files can be added later. It is likely
-    # that we will get mutliple tables from the same file, 
-    # in which case we can map that to a different map and update this to a more
-    # standalone entity map (i.e no FKs)
-    
-    #"AtBats":{"columns":["number", "game", "batter", "inning", "top", "pitches", "play", "playDetails", "baserunnerDetails"], "file": ""},
-    #"Games":{"columns":["id", "homeTeam", "visTeam", "date", "location", "useDH", "htbf", "attendance", "wp", "lp", "save"], "file": ""},
-    #"PlayerActivity":{"columns":["gameId", "playerId", "team", "battingPosition", "fieldingPosition", "inning", "pinchHit", "pinchRun"], "file": ""},
 
-}
 
 
 def connect_to_db():
@@ -52,12 +67,19 @@ def connect_to_db():
     import psycopg2
 
     DB = dict(
-        host="localhost", port=5432, dbname="mydb", user="postgres", password="postgres"
+        host=DB_HOST, port=DB_PORT, dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD
     )
     SCHEMA = "baseball_db"
     return psycopg2.connect(**DB)
 
 
+
+
+
+
+
+
+#### -------- #### ---------------------- example usage below ----------------- #### -------- ####
 def main():
     """
     example function use and instruction sequence to run this script:
