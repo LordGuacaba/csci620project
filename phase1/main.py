@@ -11,13 +11,13 @@ def main():
     # Set up schema
     baseball_db.exec_file("db/schema.sql")
 
+    # Find event files, parse each, and insert the resulting rows into the database.
     data_dir = "../data/eventFiles"
     all_files = rec_read(data_dir)
     for filepath in all_files:
         all_relation_rows = parse_event_file(filepath)
         for tups in all_relation_rows:
             baseball_db.insert_relation_rows(tups)
-
 
 if __name__ == "__main__":
     main()

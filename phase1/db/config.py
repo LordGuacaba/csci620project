@@ -12,6 +12,9 @@ DB_USER = "postgres"
 DB_PASSWORD = "$nax459:)" 
 
 def connect():
+    """
+    Open a connection to the postgres database using the provided credentials.
+    """
     DB = dict(
         host=DB_HOST, port=DB_PORT, dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD
         )

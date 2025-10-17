@@ -1,3 +1,9 @@
+"""
+This module provides a class definition for a generic relation row in a database and defines several child classes
+useful to our project. Relation instances can be passed generically into certain functions in the db loading program
+that greatly simplify the execution and understanding of parsing and insertion code.
+"""
+
 class Relation:
 
     def __init__(self, name, cols: tuple[str]):

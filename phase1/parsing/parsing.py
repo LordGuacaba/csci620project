@@ -4,24 +4,6 @@ from model.relations import *
 
 PLAY_ACT_ID = 1
 
-# going to use this table map to define expected columns for different tables
-# and expected files to parse from data directory
-# this is a simplified example, real schema will be more complex
-TABLE_MAP = {
-    "Stadiums": {"columns": ["id", "name", "city", "state"], "file": "../data/ballparks.csv"},
-    "Teams": {"columns": ["id", "name", "city", "first", "last"], "file": "../data/teams.csv"},
-    "Players": {"columns": ["id", "firstName", "lastName", "battingHandedness", "position", "DOB", "throwingHandedness"], "file": "../data/biofile/biofile.csv"},
-    # add more tables as needed. files can be added later. It is likely
-    # that we will get mutliple tables from the same file, 
-    # in which case we can map that to a different map and update this to a more
-    # standalone entity map (i.e no FKs)
-
-    # "AtBats":{"columns":["number", "game", "batter", "inning", "top", "pitches", "play", "playDetails", "baserunnerDetails"], "file": ""},
-    # "Games":{"columns":["id", "homeTeam", "visTeam", "date", "location", "useDH", "htbf", "attendance", "wp", "lp", "save"], "file": ""},
-    # "PlayerActivity":{"columns":["gameId", "playerId", "team", "battingPosition", "fieldingPosition", "inning", "pinchHit", "pinchRun"], "file": ""},
-
-}
-
 #################################################################################################
 ### Helper functions for parse CSV files to pandas dataframe and convert to SQL insert statements
 #################################################################################################
@@ -54,7 +36,7 @@ def parse_csv_file_to_pandas_df(file_path):
 
 
 def parse_event_file(file_path):
-    """parsing eva and evn files"""
+    """Parses an event file and returns the resulting Games, AtBats, and PlayerActivity objects to be inserted"""
     ### Storage for all table rows from this event file
     games = []
     plays = []

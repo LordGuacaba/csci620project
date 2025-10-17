@@ -16,23 +16,13 @@ def exec_file(filepath: str):
     conn.commit()
     conn.close()
 
-def exec_get_one(sql, args={}):
-    conn = connect()
-    cur = conn.cursor()
-    cur.execute(sql, args)
-    one = cur.fetchone()
-    conn.close()
-    return one
-
-def exec_get_all(sql, args={}):
-    conn = connect()
-    cur = conn.cursor()
-    cur.execute(sql, args)
-    rows = cur.fetchall()
-    conn.close()
-    return rows
-
 def exec_commit(sql, args={}):
+    """
+    Execute an update to the database.
+    Params:
+    - sql: the prepared update statement 
+    - args: the parameters to insert into the prepared statement.
+    """
     conn = connect()
     cur = conn.cursor()
     result = cur.execute(sql, args)
@@ -41,6 +31,9 @@ def exec_commit(sql, args={}):
     return result
 
 def insert_relation_rows(rows: list[Relation]):
+    """
+    Insert each row in the list of Relation rows into the database.
+    """
     cols = ", ".join([col for col in rows[0].cols])
     sql = f"INSERT INTO {rows[0].name} ({cols}) VALUES "
     values = []
