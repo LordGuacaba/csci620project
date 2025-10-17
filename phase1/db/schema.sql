@@ -30,7 +30,7 @@ CREATE TABLE Players (
 );
 
 CREATE TABLE Games (
-    id VARCHAR(15) PRIMARY KEY NOT NULL,
+    id VARCHAR(20) PRIMARY KEY NOT NULL,
     homeTeam CHAR(3),
     visTeam CHAR(3),
     date TIMESTAMP,
@@ -50,8 +50,8 @@ CREATE TABLE Games (
 );
 
 CREATE TABLE PlayerActivity (
-    id INT PRIMARY KEY NOT NULL,
-    gameId VARCHAR(15) NOT NULL,
+    id BIGINT PRIMARY KEY NOT NULL,
+    gameId VARCHAR(20) NOT NULL,
     playerId CHAR(8) NOT NULL,
     team CHAR(3) NOT NULL,
     battingPos INT,

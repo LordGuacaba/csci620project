@@ -3,6 +3,7 @@ Provides a class that connects to the postgres database and provides methods for
 """
 
 import psycopg2
+from model.relations import Relation
 
 # DB connection settings
 DB_HOST = "localhost"
@@ -52,3 +53,9 @@ def exec_commit(sql, args={}):
     conn.commit()
     conn.close()
     return result
+
+def insert_relation_rows(rows: list[Relation]):
+    for row in rows:
+        sql = f"INSERT INTO {row.name} VALUES ("
+        sql += ", ".join(["%s" for _ in len(row.cols)]) + ")"
+        exec_commit(sql, row.getValues())
