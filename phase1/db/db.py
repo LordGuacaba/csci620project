@@ -1,23 +1,9 @@
 """
-Provides a class that connects to the postgres database and provides methods for updates and queries.
+Provides postgres db helper methods.
 """
 
-import psycopg2
-from model.relations import Relation
-
-# DB connection settings
-DB_HOST = "localhost"
-DB_PORT = 5432
-DB_NAME = "baseball_db"
-DB_USER = "postgres"
-DB_PASSWORD = "$nax459:)"
-DB_SCHEMA = "baseball_db"
-
-def connect():
-    DB = dict(
-        host=DB_HOST, port=DB_PORT, dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD
-        )
-    return psycopg2.connect(**DB)   
+from db.config import connect
+from model.relations import Relation   
 
 def exec_file(filepath: str):
     """
