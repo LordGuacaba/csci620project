@@ -38,19 +38,19 @@ def parse_csv_file_to_pandas_df(file_path):
     df = pd.read_csv(file_path)
     return df
 
-def parse_df_to_SQL_inserts(df, table_name):
-    """
-    convert pandas dataframe to SQL insert statements
-    may need adjustment based on the actual schema / columns we want for specific tables
-    """
-    import pandas as pd
-    insert_statements = []
-    for index, row in df.iterrows():
-        columns = ', '.join(df.columns)
-        values = ', '.join([f"'{str(value).replace("'", "''")}'" if pd.notnull(value) else 'NULL' for value in row])
-        insert_statement = f"INSERT INTO {table_name} ({columns}) VALUES ({values});"
-        insert_statements.append(insert_statement)
-    return insert_statements
+# def parse_df_to_SQL_inserts(df, table_name):
+#     """
+#     convert pandas dataframe to SQL insert statements
+#     may need adjustment based on the actual schema / columns we want for specific tables
+#     """
+#     import pandas as pd
+#     insert_statements = []
+#     for index, row in df.iterrows():
+#         columns = ', '.join(df.columns)
+#         values = ', '.join([f"'{str(value).replace("'", "''")}'" if pd.notnull(value) else 'NULL' for value in row])
+#         insert_statement = f"INSERT INTO {table_name} ({columns}) VALUES ({values});"
+#         insert_statements.append(insert_statement)
+#     return insert_statements
 
 
 def parse_event_file(file_path):
@@ -67,6 +67,7 @@ def parse_event_file(file_path):
     
     with open(file_path, 'r') as f:
         for line in f:
+            line = line.strip()
             if line.startswith("id"):
                 current_game = Game()
                 current_inning = 1
@@ -77,10 +78,10 @@ def parse_event_file(file_path):
                 parse_info_line(line, current_game)
             elif line.startswith("start") or line.startswith("sub"):
                 act = parse_start_and_sub_line(line, (current_game.values["visteam"], current_game.values["hometeam"]), current_inning)
-                act.setValue("game", current_game.values["id"])
+                act.setValue("gameId", current_game.values["id"])
                 activity.append(act)
             elif line.startswith("play"):
-                at_bat = parse_play_line(line)
+                at_bat = parse_play_line(line, (current_game.values["visteam"], current_game.values["hometeam"]))
                 current_inning = at_bat.values["inning"]
                 if at_bat.values["play"] == None:
                     continue
@@ -145,9 +146,11 @@ def parse_start_and_sub_line(line: str, home_away: tuple, inning: int):
     """
     parts = line.split(",")
     act = PlayerActivity()
+    global PLAY_ACT_ID
     act.setValue("id", PLAY_ACT_ID)
     PLAY_ACT_ID += 1
-    act.setValue("playerid", parts[1])
+
+    act.setValue("playerId", parts[1])
     act.setValue("team", home_away[int(parts[3])])
     act.setValue("inning", inning)
     act.setValue("battingPos", int(parts[4]))
@@ -184,12 +187,13 @@ def parse_play_line(line: str, home_away: tuple) -> AtBat:
         return atBat
     atBat.setValue("team", home_away[int(parts[2])])
     atBat.setValue("top_bottom", ["T", "B"][int(parts[2])])
-    atBat.setValue("player", parts[3])
+    atBat.setValue("batter", parts[3])
     atBat.setValue("pitches", parts[5])
     play = parts[6].split("/")
     atBat.setValue("play", play[0])
     baserun_split = play[-1].split(".")
-    atBat.setValue("baserunnerDetails", baserun_split[1])
+    if len(baserun_split) > 1:
+        atBat.setValue("baserunnerDetails", baserun_split[1])
     play[-1] = baserun_split[0]
     atBat.setValue("playDetails", "/".join(play[1:]))
     return atBat
@@ -204,11 +208,3 @@ def example():
     4. python parsing.py                                                # to run this script
     """
 
-    for table_name, info in TABLE_MAP.items():                          # for loop to parse each file and insert into corresponding table
-        file_path = info["file"]
-        df = parse_csv_file_to_pandas_df(file_path)
-        sql_inserts = parse_df_to_SQL_inserts(df, table_name) 
-        for insert in sql_inserts:
-            # this is printing for now, but should be executed in real use
-            print(insert)
-            # cursor.execute(insert)

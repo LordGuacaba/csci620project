@@ -55,7 +55,13 @@ def exec_commit(sql, args={}):
     return result
 
 def insert_relation_rows(rows: list[Relation]):
+    cols = ", ".join([col for col in rows[0].cols])
+    sql = f"INSERT INTO {rows[0].name} ({cols}) VALUES "
+    values = []
+    param_strings = []
     for row in rows:
-        sql = f"INSERT INTO {row.name} VALUES ("
-        sql += ", ".join(["%s" for _ in len(row.cols)]) + ")"
-        exec_commit(sql, row.getValues())
+        param_strings.append("(" + ", ".join(["%s" for _ in range(len(row.cols))]) + ")")
+        for val in row.getValues():
+            values.append(val)
+    sql += ", ".join(param_strings)
+    exec_commit(sql, values)

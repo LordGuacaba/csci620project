@@ -14,7 +14,7 @@ class Relation:
 class Game(Relation):
 
     def __init__(self):
-        super().__init__("Games", ("id", "hometeam", "visteam", "date", "location", "usedh", "htbf", "attendance", "winningpitcher", "losingpitcher", "sv"))
+        super().__init__("Games", ("id", "hometeam", "visteam", "date", "location", "usedh", "htbf", "attendance", "winningPitcher", "losingPitcher", "sv"))
 
 class Ballpark(Relation):
 
@@ -34,7 +34,7 @@ class Player(Relation):
 class PlayerActivity(Relation):
 
     def __init__(self):
-        super().__init__("PlayerActivity", ("id", "gameid", "playerid", "team", "battingPos", "fieldingPos", "pinchHit", "pinchRun"))
+        super().__init__("PlayerActivity", ("id", "gameId", "playerId", "team", "battingPos", "fieldingPos", "pinchHit", "pinchRun"))
 
 class AtBat(Relation):
 
