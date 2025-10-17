@@ -1,14 +1,5 @@
 ### GLOBAL CONSTANTS AND IMPORTS #########################################################
 
-# DB connection settings
-DB_HOST = "localhost"
-DB_PORT = 5432
-DB_NAME = "mydb"
-DB_USER = "postgres"
-DB_PASSWORD = "postgres"
-DB_SCHEMA = "baseball_db"
-
-
 # going to use this table map to define expected columns for different tables
 # and expected files to parse from data directory
 # this is a simplified example, real schema will be more complex
@@ -56,21 +47,6 @@ def parse_df_to_SQL_inserts(df, table_name):
         insert_statement = f"INSERT INTO {table_name} ({columns}) VALUES ({values});"
         insert_statements.append(insert_statement)
     return insert_statements
-
-
-
-def connect_to_db():
-    """
-    Connect to Postgres using settings in DB dict. example usage: conn = connect_to_db()
-    add params for host, port, dbname, user, password as needed. find defaults to fill in.
-    """
-    import psycopg2
-
-    DB = dict(
-        host=DB_HOST, port=DB_PORT, dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD
-    )
-    SCHEMA = "baseball_db"
-    return psycopg2.connect(**DB)
 
 
 def parse_event_file(file_path):
@@ -290,8 +266,6 @@ def main():
     3. pip install -r requirements.txt                                  # to install required packages
     4. python parsing.py                                                # to run this script
     """
-    conn = connect_to_db()                                              # connect to the database
-    cursor = conn.cursor()                                              # create a cursor object to execute SQL commands
 
     for table_name, info in TABLE_MAP.items():                          # for loop to parse each file and insert into corresponding table
         file_path = info["file"]

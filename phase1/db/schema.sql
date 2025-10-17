@@ -20,6 +20,15 @@ CREATE TABLE Ballparks (
     state CHAR(2)
 );
 
+CREATE TABLE Players (
+    id CHAR(8) PRIMARY KEY NOT NULL,
+    firstName VARCHAR(30),
+    lastName VARCHAR(30),
+    DOB DATE,
+    bats CHAR(1),
+    throws CHAR(1)
+);
+
 CREATE TABLE Games (
     id VARCHAR(15) PRIMARY KEY NOT NULL,
     homeTeam CHAR(3),
@@ -40,17 +49,8 @@ CREATE TABLE Games (
     FOREIGN KEY (sv) REFERENCES Players(id)
 );
 
-CREATE TABLE Players (
-    id CHAR(8) PRIMARY KEY NOT NULL,
-    firstName VARCHAR(30),
-    lastName VARCHAR(30),
-    DOB DATE,
-    bats CHAR(1),
-    throws CHAR(1)
-);
-
 CREATE TABLE PlayerActivity (
-    id UID PRIMARY KEY NOT NULL,
+    id INT PRIMARY KEY NOT NULL,
     gameId VARCHAR(15) NOT NULL,
     playerId CHAR(8) NOT NULL,
     team CHAR(3) NOT NULL,
