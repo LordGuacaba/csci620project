@@ -33,7 +33,7 @@ CREATE TABLE Games (
     id VARCHAR(20) PRIMARY KEY NOT NULL,
     homeTeam CHAR(3),
     visTeam CHAR(3),
-    date TIMESTAMP,
+    date DATE,
     location CHAR(5),
     useDH BOOLEAN,
     htbf BOOLEAN,

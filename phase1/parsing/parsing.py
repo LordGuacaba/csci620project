@@ -1,5 +1,9 @@
 ### GLOBAL CONSTANTS AND IMPORTS #########################################################
 
+from model.relations import *
+
+PLAY_ACT_ID = 1
+
 # going to use this table map to define expected columns for different tables
 # and expected files to parse from data directory
 # this is a simplified example, real schema will be more complex
@@ -51,60 +55,75 @@ def parse_df_to_SQL_inserts(df, table_name):
 
 def parse_event_file(file_path):
     """parsing eva and evn files"""
-    insert_statements = []
+    ### Storage for all table rows from this event file
+    games = []
+    plays = []
+    activity = []
+
+    # Current game values
+    current_game: Game = None
+    current_inning = 1
+    play_num = 1
+    
     with open(file_path, 'r') as f:
         for line in f:
-            if line.startswith("info"):
-                #insert_statements.extend(parse_info_line(line))
-                continue  # skipping info lines for now
-            elif line.startswith("id"):
-                insert_statements.extend(parse_id_line(line))
+            if line.startswith("id"):
+                current_game = Game()
+                current_inning = 1
+                play_num = 1
+                current_game.setValue("id", parse_id_line(line))
+                games.append(current_game)
+            elif line.startswith("info"):
+                parse_info_line(line, current_game)
             elif line.startswith("start") or line.startswith("sub"):
-                insert_statements.extend(parse_start_and_sub_line(line))
+                act = parse_start_and_sub_line(line, (current_game.values["visteam"], current_game.values["hometeam"]), current_inning)
+                act.setValue("game", current_game.values["id"])
+                activity.append(act)
             elif line.startswith("play"):
-                insert_statements.extend(parse_play_line(line))
-            elif line.startswith("com"):
-                insert_statements.extend(parse_com_line(line))
-            elif line.startswith("data"):
-                insert_statements.extend(parse_data_line(line))
-            elif line.startswith("badj"):
-                insert_statements.extend(parse_badj_line(line))
-            elif line.startswith("padj"):
-                insert_statements.extend(parse_padj_line(line))
-            elif line.startswith("ladj"):
-                insert_statements.extend(parse_ladj_line(line))
-            elif line.startswith("radj"):
-                insert_statements.extend(parse_radj_line(line))
-            elif line.startswith("presadj"):
-                insert_statements.extend(parse_presadj_line(line))
-            else:
-                print(f"Unknown line type: {line}")
+                at_bat = parse_play_line(line)
+                current_inning = at_bat.values["inning"]
+                if at_bat.values["play"] == None:
+                    continue
+                at_bat.setValue("num", play_num)
+                play_num += 1
+                at_bat.setValue("game", current_game.values["id"])
+                plays.append(at_bat)
 
-    return insert_statements
+    return games, plays, activity
 
-def parse_info_line(line):
+def parse_info_line(line: str, game: Game):
     """
-    this is extremely variable, so we will just return the line for now.
+    If we care about the info type, add it to the game's values. Otherwise ignore.
     """
-    pass
+    mapping = {
+        "visteam": "visteam",
+        "hometeam": "hometeam",
+        "date": "date",
+        "site": "location",
+        "attendance": "attendance",
+        "htbf": "htbf",
+        "usedh": "usedh",
+        "wp": "winningPitcher",
+        "lp": "losingPitcher",
+        "save": "sv"
+    }
+    parts = line.split(",")
+    try:
+        game.setValue(mapping[parts[1]], parts[2])
+    except:
+        pass
+        
 
-def parse_id_line(line):
+def parse_id_line(line: str):
     """
-    first 3 letters id home team
-    next 4 are the year
-    next 2 are month
-    next 2 are day
-    last number is single game(0), first game(1), or second game(2)
+    Return the unique game id provided by the id lines in a file
     """
-    home_team = line[3:6]
-    year = line[6:10]
-    month = line[10:12]
-    day = line[12:14]
-    game_number = line[14]
+    return line.strip().split(",")[1]
 
-    return [f"INSERT INTO Games (id, homeTeam, date) VALUES ('{line[3:]}', '{home_team}', '{year}-{month}-{day}');"]
-def parse_start_and_sub_line(line):
+def parse_start_and_sub_line(line: str, home_away: tuple, inning: int):
     """
+    With the below details, add the appropriate fields to a new PlayerActivity row object and return it.
+
     1. The first field is the Retrosheet player id, which is unique for each player.
 
     2. The second field is the player's name.
@@ -124,16 +143,24 @@ def parse_start_and_sub_line(line):
         When a player pinch hits or pinch runs for the DH, that player automatically becomes the DH, 
         so no 'sub' record is included to identify the new DH.
     """
-    id = line.split(",")[1]
-    name = line.split(",")[2]
-    team = line.split(",")[3]
-    batting_position = line.split(",")[4]
-    fielding_position = line.split(",")[5]
-    return [f"INSERT INTO PlayerActivity (gameId, playerId, team, battingPosition, fieldingPosition) VALUES ('{id}', '{name}', '{team}', {batting_position}, {fielding_position});"]
+    parts = line.split(",")
+    act = PlayerActivity()
+    act.setValue("id", PLAY_ACT_ID)
+    PLAY_ACT_ID += 1
+    act.setValue("playerid", parts[1])
+    act.setValue("team", home_away[int(parts[3])])
+    act.setValue("inning", inning)
+    act.setValue("battingPos", int(parts[4]))
+    act.setValue("fieldingPos", int(parts[5]))
+    act.setValue("pinchHit", int(parts[5]) == 11)
+    act.setValue("pinchRun", int(parts[5]) == 12)
+    return act
 
-def parse_play_line(line):
+def parse_play_line(line: str, home_away: tuple) -> AtBat:
     """
-    play The play records contain the events of the game. Each play record has 6 fields after "play".
+    With the below details, create a new AtBat row object and add the appropriate fields.
+
+    The play records contain the events of the game. Each play record has 6 fields after "play".
 
     1. The first field is the inning, an integer starting at 1.
 
@@ -149,116 +176,26 @@ def parse_play_line(line):
 
     6. The sixth field describes the play or event that occurred.
     """
+    atBat = AtBat()
     parts = line.split(",")
-    inning = parts[1]
-    team = parts[2]
-    batter_id = parts[3]
-    count = parts[4]
-    pitches = parts[5]
-    play = ",".join(parts[6:]).strip()  # in case play contains commas
 
-    return [f"INSERT INTO AtBats (game, inning, top, batter, count, pitches, play) VALUES ('{batter_id}', {inning}, {team}, '{batter_id}', '{count}', '{pitches}', '{play}');"]
-def parse_com_line(line):
-    """
-    !!!! NOT CURRENTLY USED !!!!
-    The final record type is used primarily to add explanatory information for a play. 
-    Although it may occur anywhere in a file, it is usually not present until after the start records. 
-    The second field of the com record is quoted.
-
-        com,"ML debut for Behenna"
-    """
-    # COMMENTS?
-    return [f"INSERT INTO Comments (gameId, comment) VALUES ('{line[3:]}', '{line[4:]}');"]
-def parse_data_line(line):
-    """
-    Data records appear after all records from the game. 
-    At present, the only data type, that is defined specifies the number of earned runs allowed by a pitcher. 
-    Each such record contains the pitcher's Retrosheet player id and the number of earned runs he allowed. 
-    There is a data record for each pitcher that appeared in the game.
-
-        data,er,showe001,2
-    """
-    parts = line.split(",")
-    pitcher_id = parts[2]
-    earned_runs = parts[3]
-    # idk where to put this
-    return [f"INSERT INTO earnedRuns (pitcherId, earnedRuns) VALUES ('{pitcher_id}', {earned_runs});"]
-\
-def parse_badj_line(line):
-    """
-    batter adjustment
-    This record is used to mark a plate appearance in which the batter bats from the side that is not expected. The syntax is:
-        badj,batter id,hand
-    therefore as an example:
-
-        badj,bonib001,R
-    """
-    parts = line.split(",")
-    batter_id = parts[1]
-    hand = parts[2]
-    return [f"INSERT INTO badj (batterId, hand) VALUES ('{batter_id}', '{hand}');"]
-def parse_padj_line(line):
-    """
-    pitcher adjustment
-        padj,pitcher id,hand
-    The expectation is defined by the roster file and an example is:
-
-        padj,harrg001,L
-    """
-    parts = line.split(",")
-    pitcher_id = parts[1]
-    hand = parts[2]
-    return [f"INSERT INTO padj (pitcherId, hand) VALUES ('{pitcher_id}', '{hand}');"]
-
-def parse_ladj_line(line):
-    """
-    "Lineup adjustment". 
-    This record is used when a team bats out of order. The syntax is:
-
-        ladj,batting team,batting order position
-
-    therefore as an example:
-
-        ladj,0,4
-    """
-    parts = line.split(",")
-    team = parts[1]
-    batting_position = parts[2]
-    return [f"INSERT INTO ladj (team, battingPosition) VALUES ('{team}', {batting_position});"]
-def parse_radj_line(line):
-    """
-    "Runner adjustment". 
-    This record is used in games beginning in 2020 in which an extra inning begins with a runner on 2nd. The syntax is:
-
-        radj,runner id,base
-
-    therefore as an example:
-
-        radj,turnj001,2
-    """
-    
-    parts = line.split(",")
-    runner_id = parts[1]
-    base = parts[2]
-    return [f"INSERT INTO radj (runnerId, base) VALUES ('{runner_id}', {base});"]
-def parse_presadj_line(line):
-    """
-    "Pitcher responsibility adjustment"
-        presadj,pitcher id,base occupied by relevant runner
-
-    therefore as an example:
-
-        presadj,cicoe001,2
-
-    """
-    
-    parts = line.split(",")
-    pitcher_id = parts[1]
-    base = parts[2]
-    return [f"INSERT INTO presadj (pitcherId, base) VALUES ('{pitcher_id}', {base});"]
+    atBat.setValue("inning", int(parts[1]))
+    if parts[6] == "NP":
+        return atBat
+    atBat.setValue("team", home_away[int(parts[2])])
+    atBat.setValue("top_bottom", ["T", "B"][int(parts[2])])
+    atBat.setValue("player", parts[3])
+    atBat.setValue("pitches", parts[5])
+    play = parts[6].split("/")
+    atBat.setValue("play", play[0])
+    baserun_split = play[-1].split(".")
+    atBat.setValue("baserunnerDetails", baserun_split[1])
+    play[-1] = baserun_split[0]
+    atBat.setValue("playDetails", "/".join(play[1:]))
+    return atBat
 
 #### -------- #### ---------------------- example usage below ----------------- #### -------- ####
-def main():
+def example():
     """
     example function use and instruction sequence to run this script:
     1. python (or python3) -m venv venv.                                # to create a virtual environment
@@ -275,6 +212,3 @@ def main():
             # this is printing for now, but should be executed in real use
             print(insert)
             # cursor.execute(insert)
-
-if __name__ == "__main__":
-    main()
