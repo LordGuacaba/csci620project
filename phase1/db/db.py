@@ -28,3 +28,27 @@ def exec_file(filepath: str):
         cur.execute(file.read())
     conn.commit()
     conn.close()
+
+def exec_get_one(sql, args={}):
+    conn = connect()
+    cur = conn.cursor()
+    cur.execute(sql, args)
+    one = cur.fetchone()
+    conn.close()
+    return one
+
+def exec_get_all(sql, args={}):
+    conn = connect()
+    cur = conn.cursor()
+    cur.execute(sql, args)
+    rows = cur.fetchall()
+    conn.close()
+    return rows
+
+def exec_commit(sql, args={}):
+    conn = connect()
+    cur = conn.cursor()
+    result = cur.execute(sql, args)
+    conn.commit()
+    conn.close()
+    return result
