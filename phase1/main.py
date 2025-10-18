@@ -32,6 +32,8 @@ def main():
     baseball_db.insert_relation_rows(players)
     baseball_db.insert_relation_rows(teams)
 
+    print("Static data loaded successfully.")
+
     # Find event files, parse each, and insert the resulting rows into the database.
     data_dir = "../data/eventFiles"
     all_files = rec_read(data_dir)

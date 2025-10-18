@@ -18,7 +18,12 @@ def parse_csv_file_to_pandas_df(file_path):
     """
     import pandas as pd
 
-    df = pd.read_csv(file_path)
+    df = pd.read_csv(
+        file_path,
+        na_values=["", "NA", "NaN", "nan", None],
+    )
+    df = df.where(pd.notna(df), None)
+
     return df
 
 
@@ -54,7 +59,7 @@ def parse_player_df_to_SQL_inserts(df):
         player.setValue("id", row["PLAYERID"])
         player.setValue("firstname", row["FIRST"])
         player.setValue("lastname", row["LAST"])
-        player.setValue("DOB", row["BIRTHDATE"])
+        player.setValue("DOB", pd.to_datetime(row["BIRTHDATE"], errors="coerce"))
         player.setValue("bats", row["BATS"])
         player.setValue("throws", row["THROWS"])
         players.append(player)
@@ -144,7 +149,8 @@ def parse_info_line(line: str, game: Game):
     }
     parts = line.split(",")
     try:
-        game.setValue(mapping[parts[1]], parts[2])
+        part2 = None if parts[2] == "" else parts[2]
+        game.setValue(mapping[parts[1]], part2)
     except:
         pass
 

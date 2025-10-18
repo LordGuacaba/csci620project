@@ -17,7 +17,7 @@ CREATE TABLE Ballparks (
     id CHAR(5) PRIMARY KEY NOT NULL,
     name VARCHAR(50),
     city VARCHAR(50),
-    state CHAR(2)
+    state VARCHAR(50)
 );
 
 CREATE TABLE Players (
@@ -76,7 +76,7 @@ CREATE TABLE AtBats (
     play VARCHAR(50),
     playDetails VARCHAR(50),
     baseRunnerDetails VARCHAR(50),
-    
+
     PRIMARY KEY (num, game),
     FOREIGN KEY (game) REFERENCES Games(id),
     FOREIGN KEY (batter) REFERENCES Players(id)
