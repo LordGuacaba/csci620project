@@ -233,14 +233,3 @@ def parse_play_line(line: str, home_away: tuple) -> AtBat:
     play[-1] = baserun_split[0]
     atBat.setValue("playDetails", "/".join(play[1:]))
     return atBat
-
-
-#### -------- #### ---------------------- example usage below ----------------- #### -------- ####
-def example():
-    """
-    example function use and instruction sequence to run this script:
-    1. python (or python3) -m venv venv.                                # to create a virtual environment
-    2. source venv/bin/activate                                         # to activate the virtual environment
-    3. pip install -r requirements.txt                                  # to install required packages
-    4. python parsing.py                                                # to run this script
-    """
