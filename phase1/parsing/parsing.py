@@ -8,6 +8,7 @@ PLAY_ACT_ID = 1
 ### Helper functions for parse CSV files to pandas dataframe and convert to SQL insert statements
 #################################################################################################
 
+
 def parse_csv_file_to_pandas_df(file_path):
     """
     assume first line is the header, including column names seperated by comma
@@ -20,19 +21,62 @@ def parse_csv_file_to_pandas_df(file_path):
     df = pd.read_csv(file_path)
     return df
 
-# def parse_df_to_SQL_inserts(df, table_name):
-#     """
-#     convert pandas dataframe to SQL insert statements
-#     may need adjustment based on the actual schema / columns we want for specific tables
-#     """
-#     import pandas as pd
-#     insert_statements = []
-#     for index, row in df.iterrows():
-#         columns = ', '.join(df.columns)
-#         values = ', '.join([f"'{str(value).replace("'", "''")}'" if pd.notnull(value) else 'NULL' for value in row])
-#         insert_statement = f"INSERT INTO {table_name} ({columns}) VALUES ({values});"
-#         insert_statements.append(insert_statement)
-#     return insert_statements
+
+def parse_team_df_to_SQL_inserts(df):
+    """
+    convert pandas dataframe to SQL insert statements for Teams table
+    may need adjustment based on the actual schema / columns we want for Teams table
+    """
+    import pandas as pd
+
+    teams = []
+    for index, row in df.iterrows():
+        team = Team()
+        team.setValue("id", row["team"])
+        team.setValue("name", row["nickname"])
+        team.setValue("city", row["city"])
+        team.setValue("first", row["first"])
+        team.setValue("last", row["last"])
+        teams.append(team)
+    return teams
+
+
+def parse_player_df_to_SQL_inserts(df):
+    """
+    convert pandas dataframe to SQL insert statements for Players table
+    may need adjustment based on the actual schema / columns we want for Players table
+    """
+    import pandas as pd
+
+    players = []
+    for index, row in df.iterrows():
+        player = Player()
+        player.setValue("id", row["playerID"])
+        player.setValue("firstname", row["first"])
+        player.setValue("lastname", row["last"])
+        player.setValue("DOB", row["birthdate"])
+        player.setValue("bats", row["bats"])
+        player.setValue("throws", row["throws"])
+        players.append(player)
+    return players
+
+
+def parse_ballpark_df_to_SQL_inserts(df):
+    """
+    convert pandas dataframe to SQL insert statements for Ballparks table
+    may need adjustment based on the actual schema / columns we want for Ballparks table
+    """
+    import pandas as pd
+
+    ballparks = []
+    for index, row in df.iterrows():
+        ballpark = Ballpark()
+        ballpark.setValue("id", row["parkid"])
+        ballpark.setValue("name", row["name"])
+        ballpark.setValue("city", row["city"])
+        ballpark.setValue("state", row["state"])
+        ballparks.append(ballpark)
+    return ballparks
 
 
 def parse_event_file(file_path):
@@ -46,8 +90,8 @@ def parse_event_file(file_path):
     current_game: Game = None
     current_inning = 1
     play_num = 1
-    
-    with open(file_path, 'r') as f:
+
+    with open(file_path, "r") as f:
         for line in f:
             line = line.strip()
             if line.startswith("id"):
@@ -59,11 +103,18 @@ def parse_event_file(file_path):
             elif line.startswith("info"):
                 parse_info_line(line, current_game)
             elif line.startswith("start") or line.startswith("sub"):
-                act = parse_start_and_sub_line(line, (current_game.values["visteam"], current_game.values["hometeam"]), current_inning)
+                act = parse_start_and_sub_line(
+                    line,
+                    (current_game.values["visteam"], current_game.values["hometeam"]),
+                    current_inning,
+                )
                 act.setValue("gameId", current_game.values["id"])
                 activity.append(act)
             elif line.startswith("play"):
-                at_bat = parse_play_line(line, (current_game.values["visteam"], current_game.values["hometeam"]))
+                at_bat = parse_play_line(
+                    line,
+                    (current_game.values["visteam"], current_game.values["hometeam"]),
+                )
                 current_inning = at_bat.values["inning"]
                 if at_bat.values["play"] == None:
                     continue
@@ -73,6 +124,7 @@ def parse_event_file(file_path):
                 plays.append(at_bat)
 
     return games, plays, activity
+
 
 def parse_info_line(line: str, game: Game):
     """
@@ -88,20 +140,21 @@ def parse_info_line(line: str, game: Game):
         "usedh": "usedh",
         "wp": "winningPitcher",
         "lp": "losingPitcher",
-        "save": "sv"
+        "save": "sv",
     }
     parts = line.split(",")
     try:
         game.setValue(mapping[parts[1]], parts[2])
     except:
         pass
-        
+
 
 def parse_id_line(line: str):
     """
     Return the unique game id provided by the id lines in a file
     """
     return line.strip().split(",")[1]
+
 
 def parse_start_and_sub_line(line: str, home_away: tuple, inning: int):
     """
@@ -111,19 +164,19 @@ def parse_start_and_sub_line(line: str, home_away: tuple, inning: int):
 
     2. The second field is the player's name.
 
-    3. The next field is either 0 (for visiting team), or 1 (for home team). 
-        In some games, typically due to scheduling conflicts, the home team (the team whose stadium the game is played in) 
-        bats first (in the top of the innings) and the visiting team bats second (in the bottom of the innings). 
-        In these games, contrary to "normal" games, start records for the home team ("1") precede start records for the visiting team ("0"). 
+    3. The next field is either 0 (for visiting team), or 1 (for home team).
+        In some games, typically due to scheduling conflicts, the home team (the team whose stadium the game is played in)
+        bats first (in the top of the innings) and the visiting team bats second (in the bottom of the innings).
+        In these games, contrary to "normal" games, start records for the home team ("1") precede start records for the visiting team ("0").
         Similarly, the play codes pertaining to the home team ("1") precede the play codes pertaining to the visiting team ("0").
 
-    4. The next field is the position in the batting order, 1 - 9. 
+    4. The next field is the position in the batting order, 1 - 9.
         When a game is played using the DH rule the pitcher is given the batting order position 0.
 
-    5. The last field is the fielding position. 
-        The numbers are in the standard notation, with designated hitters being identified as position 10. 
-        On sub records 11 indicates a pinch hitter and 12 is used for a pinch runner. 
-        When a player pinch hits or pinch runs for the DH, that player automatically becomes the DH, 
+    5. The last field is the fielding position.
+        The numbers are in the standard notation, with designated hitters being identified as position 10.
+        On sub records 11 indicates a pinch hitter and 12 is used for a pinch runner.
+        When a player pinch hits or pinch runs for the DH, that player automatically becomes the DH,
         so no 'sub' record is included to identify the new DH.
     """
     parts = line.split(",")
@@ -141,6 +194,7 @@ def parse_start_and_sub_line(line: str, home_away: tuple, inning: int):
     act.setValue("pinchRun", int(parts[5]) == 12)
     return act
 
+
 def parse_play_line(line: str, home_away: tuple) -> AtBat:
     """
     With the below details, create a new AtBat row object and add the appropriate fields.
@@ -153,10 +207,10 @@ def parse_play_line(line: str, home_away: tuple) -> AtBat:
 
     3. The third field is the Retrosheet player id of the player at the plate.
 
-    4. The fourth field is the count on the batter when this particular event (play) occurred. 
+    4. The fourth field is the count on the batter when this particular event (play) occurred.
         Most games prior to 1988 do not have this information, and in such cases, "??" appears in this field.
 
-    5. The fifth field is of variable length and contains all pitches to this batter in this plate appearance and is described below. 
+    5. The fifth field is of variable length and contains all pitches to this batter in this plate appearance and is described below.
         If pitches are unknown, this field is left empty with nothing in between the commas.
 
     6. The sixth field describes the play or event that occurred.
@@ -180,6 +234,7 @@ def parse_play_line(line: str, home_away: tuple) -> AtBat:
     atBat.setValue("playDetails", "/".join(play[1:]))
     return atBat
 
+
 #### -------- #### ---------------------- example usage below ----------------- #### -------- ####
 def example():
     """
@@ -189,4 +244,3 @@ def example():
     3. pip install -r requirements.txt                                  # to install required packages
     4. python parsing.py                                                # to run this script
     """
-

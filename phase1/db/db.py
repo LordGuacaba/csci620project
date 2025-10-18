@@ -3,7 +3,8 @@ Provides postgres db helper methods.
 """
 
 from db.config import connect
-from model.relations import Relation   
+from model.relations import Relation
+
 
 def exec_file(filepath: str):
     """
@@ -11,16 +12,17 @@ def exec_file(filepath: str):
     """
     conn = connect()
     cur = conn.cursor()
-    with open(filepath, 'r') as file:
+    with open(filepath, "r") as file:
         cur.execute(file.read())
     conn.commit()
     conn.close()
+
 
 def exec_commit(sql, args={}):
     """
     Execute an update to the database.
     Params:
-    - sql: the prepared update statement 
+    - sql: the prepared update statement
     - args: the parameters to insert into the prepared statement.
     """
     conn = connect()
@@ -29,6 +31,7 @@ def exec_commit(sql, args={}):
     conn.commit()
     conn.close()
     return result
+
 
 def insert_relation_rows(rows: list[Relation]):
     """
@@ -39,7 +42,9 @@ def insert_relation_rows(rows: list[Relation]):
     values = []
     param_strings = []
     for row in rows:
-        param_strings.append("(" + ", ".join(["%s" for _ in range(len(row.cols))]) + ")")
+        param_strings.append(
+            "(" + ", ".join(["%s" for _ in range(len(row.cols))]) + ")"
+        )
         for val in row.getValues():
             values.append(val)
     sql += ", ".join(param_strings)
