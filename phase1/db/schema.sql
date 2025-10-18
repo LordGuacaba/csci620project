@@ -41,12 +41,12 @@ CREATE TABLE Games (
     winningPitcher CHAR(8),
     losingPitcher CHAR(8),
     sv CHAR(8)
-    -- FOREIGN KEY (homeTeam) REFERENCES Teams(id),
-    -- FOREIGN KEY (visTeam) REFERENCES Teams(id),
-    -- FOREIGN KEY (location) REFERENCES Ballparks(id),
-    -- FOREIGN KEY (winningPitcher) REFERENCES Players(id),
-    -- FOREIGN KEY (losingPitcher) REFERENCES Players(id),
-    -- FOREIGN KEY (sv) REFERENCES Players(id)
+    FOREIGN KEY (homeTeam) REFERENCES Teams(id),
+    FOREIGN KEY (visTeam) REFERENCES Teams(id),
+    FOREIGN KEY (location) REFERENCES Ballparks(id),
+    FOREIGN KEY (winningPitcher) REFERENCES Players(id),
+    FOREIGN KEY (losingPitcher) REFERENCES Players(id),
+    FOREIGN KEY (sv) REFERENCES Players(id)
 );
 
 CREATE TABLE PlayerActivity (
@@ -59,9 +59,9 @@ CREATE TABLE PlayerActivity (
     inning INT,
     pinchHit BOOLEAN,
     pinchRun BOOLEAN
-    -- FOREIGN KEY (gameId) REFERENCES Games(id),
-    -- FOREIGN KEY (playerId) REFERENCES Players(id),
-    -- FOREIGN KEY (team) REFERENCES Teams(id)
+    FOREIGN KEY (gameId) REFERENCES Games(id),
+    FOREIGN KEY (playerId) REFERENCES Players(id),
+    FOREIGN KEY (team) REFERENCES Teams(id)
 );
 
 CREATE TABLE AtBats (
@@ -75,6 +75,6 @@ CREATE TABLE AtBats (
     playDetails VARCHAR(50),
     baseRunnerDetails VARCHAR(50),
     PRIMARY KEY (num, game)
-    -- FOREIGN KEY (game) REFERENCES Games(id),
-    -- FOREIGN KEY (batter) REFERENCES Players(id)
+    FOREIGN KEY (game) REFERENCES Games(id),
+    FOREIGN KEY (batter) REFERENCES Players(id)
 );
