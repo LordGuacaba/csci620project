@@ -40,7 +40,8 @@ CREATE TABLE Games (
     attendance INT,
     winningPitcher CHAR(8),
     losingPitcher CHAR(8),
-    sv CHAR(8)
+    sv CHAR(8),
+
     FOREIGN KEY (homeTeam) REFERENCES Teams(id),
     FOREIGN KEY (visTeam) REFERENCES Teams(id),
     FOREIGN KEY (location) REFERENCES Ballparks(id),
@@ -58,7 +59,8 @@ CREATE TABLE PlayerActivity (
     fieldingPos INT,
     inning INT,
     pinchHit BOOLEAN,
-    pinchRun BOOLEAN
+    pinchRun BOOLEAN,
+
     FOREIGN KEY (gameId) REFERENCES Games(id),
     FOREIGN KEY (playerId) REFERENCES Players(id),
     FOREIGN KEY (team) REFERENCES Teams(id)
@@ -74,7 +76,8 @@ CREATE TABLE AtBats (
     play VARCHAR(50),
     playDetails VARCHAR(50),
     baseRunnerDetails VARCHAR(50),
-    PRIMARY KEY (num, game)
+    
+    PRIMARY KEY (num, game),
     FOREIGN KEY (game) REFERENCES Games(id),
     FOREIGN KEY (batter) REFERENCES Players(id)
 );

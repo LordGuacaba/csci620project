@@ -32,11 +32,11 @@ def parse_team_df_to_SQL_inserts(df):
     teams = []
     for index, row in df.iterrows():
         team = Team()
-        team.setValue("id", row["team"])
-        team.setValue("name", row["nickname"])
-        team.setValue("city", row["city"])
-        team.setValue("first", row["first"])
-        team.setValue("last", row["last"])
+        team.setValue("id", row["TEAM"])
+        team.setValue("name", row["NICKNAME"])
+        team.setValue("city", row["CITY"])
+        team.setValue("first", row["FIRST"])
+        team.setValue("last", row["LAST"])
         teams.append(team)
     return teams
 
@@ -51,12 +51,12 @@ def parse_player_df_to_SQL_inserts(df):
     players = []
     for index, row in df.iterrows():
         player = Player()
-        player.setValue("id", row["playerID"])
-        player.setValue("firstname", row["first"])
-        player.setValue("lastname", row["last"])
-        player.setValue("DOB", row["birthdate"])
-        player.setValue("bats", row["bats"])
-        player.setValue("throws", row["throws"])
+        player.setValue("id", row["PLAYERID"])
+        player.setValue("firstname", row["FIRST"])
+        player.setValue("lastname", row["LAST"])
+        player.setValue("DOB", row["BIRTHDATE"])
+        player.setValue("bats", row["BATS"])
+        player.setValue("throws", row["THROWS"])
         players.append(player)
     return players
 
@@ -71,10 +71,10 @@ def parse_ballpark_df_to_SQL_inserts(df):
     ballparks = []
     for index, row in df.iterrows():
         ballpark = Ballpark()
-        ballpark.setValue("id", row["parkid"])
-        ballpark.setValue("name", row["name"])
-        ballpark.setValue("city", row["city"])
-        ballpark.setValue("state", row["state"])
+        ballpark.setValue("id", row["PARKID"])
+        ballpark.setValue("name", row["NAME"])
+        ballpark.setValue("city", row["CITY"])
+        ballpark.setValue("state", row["STATE"])
         ballparks.append(ballpark)
     return ballparks
 
