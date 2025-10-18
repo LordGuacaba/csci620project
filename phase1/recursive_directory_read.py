@@ -11,7 +11,7 @@ def recursiverly_read_directory(path, file_list=None):
 
     for entry in os.scandir(path):
         if entry.is_file():
-            if entry.path.endswith(".EVANT") or entry.path.endswith(".EVN"):
+            if entry.path.endswith(".EVA") or entry.path.endswith(".EVN"):
                 file_list.append(entry.path)
         elif entry.is_dir():
             recursiverly_read_directory(entry.path, file_list)
