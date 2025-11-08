@@ -6,6 +6,16 @@ from db.config import connect
 from model.relations import Relation
 
 
+def discorver_fds():
+    """
+    Discover functional dependencies in the relational database.
+    Returns a list of functional dependencies found.
+    """
+    # Placeholder implementation
+    fds = []
+    return fds
+
+
 def exec_file(filepath: str):
     """
     Execute the code in the provided sql file in the database
