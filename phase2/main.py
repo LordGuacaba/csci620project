@@ -7,6 +7,30 @@ from time import time
 from phase2.db.config import connect_to_mongo
 from phase1 import db as rdb
 from phase2 import db as mdb
+import pandas as pd
+
+
+def get_pda_dataframe(unindexed_results, indexed_results):
+
+    data = {
+        "Query": [],
+        "Unindexed Time (s)": [],
+        "Indexed Time (s)": [],
+        "Speedup": [],
+    }
+
+    for key in unindexed_results.keys():
+        unindexed_time = unindexed_results[key]
+        indexed_time = indexed_results[key]
+        speedup = unindexed_time / indexed_time if indexed_time > 0 else float("inf")
+
+        data["Query"].append(key)
+        data["Unindexed Time (s)"].append(unindexed_time)
+        data["Indexed Time (s)"].append(indexed_time)
+        data["Speedup"].append(speedup)
+
+    df = pd.DataFrame(data)
+    return df
 
 
 def rdb_queries():
@@ -75,8 +99,11 @@ def main():
     # 4. create indexes on rdb to speed up queries (time these again and print the results)
     create_rdb_indexes()
     indexed_results = rdb_queries()
-    # create pandas df to compare unindexed vs indexed results
+
+    df = get_pda_dataframe(unindexed_results, indexed_results)
     print("RDB Query Performance:")
+    print(df)
+
     # 5. discover functional dependencies in rdb
     fds = rdb.discover_fds()
     print("Discovered FDs:", fds)
