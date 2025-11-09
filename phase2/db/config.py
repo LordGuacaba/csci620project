@@ -31,3 +31,21 @@ def connect_to_mongo():
     except ConnectionFailure as e:
         print("[MongoDB] Connection failed:", e)
         raise
+
+def connect_to_postgres():
+    """
+    Open a connection to the postgres database using the provided credentials.
+    """
+    import psycopg2
+
+    # DB connection settings - these should be changed as needed for your local machine.
+    DB_HOST = "localhost"
+    DB_PORT = 5432
+    DB_NAME = "baseball_db"
+    DB_USER = "postgres"
+    DB_PASSWORD = "$nax459:)" 
+
+    DB = dict(
+        host=DB_HOST, port=DB_PORT, dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD
+        )
+    return psycopg2.connect(**DB)
