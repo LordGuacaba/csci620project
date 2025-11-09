@@ -5,8 +5,8 @@ Data files should be placed in ../data from root directory
 
 from time import time
 from phase2.db.config import connect_to_mongo
-from phase1 import db as rdb
-from phase2 import db as mdb
+from phase1.db import db as rdb
+from csci620project.phase2.db import mongo as mdb
 import pandas as pd
 
 

@@ -84,11 +84,9 @@ def parse_ballpark_df_to_documents(df):
 
 
 def parse_event_file(file_path):
-    """Parses an event file and returns the resulting Games, AtBats, and PlayerActivity objects to be inserted"""
+    """Parses an event file and returns the resulting Games documents to be inserted"""
     ### Storage for all table rows from this event file
     games = []
-    plays = []
-    activity = []
 
     # Current game values
     current_game: Game = None
@@ -102,32 +100,42 @@ def parse_event_file(file_path):
                 current_game = Game()
                 current_inning = 1
                 play_num = 1
-                current_game.setValue("id", parse_id_line(line))
+                current_game["_id"] = parse_id_line(line)
+                current_game["starts"] = []
+                current_game["subs"] = []
+                current_game["atBats"] = []
                 games.append(current_game)
             elif line.startswith("info"):
                 parse_info_line(line, current_game)
-            elif line.startswith("start") or line.startswith("sub"):
-                act = parse_start_and_sub_line(
+            elif line.startswith("start"):
+                start = parse_start_line(
                     line,
-                    (current_game.values["visteam"], current_game.values["hometeam"]),
+                    (current_game["visteam"], current_game["hometeam"])
+                )
+                current_game["starts"].append(start)
+            elif line.startswith("sub"):
+                sub = parse_sub_line(
+                    line,
+                    (current_game["visteam"], current_game["hometeam"]),
                     current_inning,
                 )
-                act.setValue("gameId", current_game.values["id"])
-                activity.append(act)
+                current_game["subs"].append(sub)
             elif line.startswith("play"):
                 at_bat = parse_play_line(
                     line,
-                    (current_game.values["visteam"], current_game.values["hometeam"]),
+                    (current_game["visteam"], current_game["hometeam"]),
                 )
-                current_inning = at_bat.values["inning"]
-                if at_bat.values["play"] == None:
+                current_inning = at_bat["inning"]
+                try:
+                    if at_bat["play"] == None:
+                        continue
+                except:
                     continue
-                at_bat.setValue("num", play_num)
+                at_bat["number"] = play_num
                 play_num += 1
-                at_bat.setValue("game", current_game.values["id"])
-                plays.append(at_bat)
+                current_game["atBats"].append(at_bat)
 
-    return games, plays, activity
+    return games
 
 
 def parse_info_line(line: str, game: Game):
@@ -144,12 +152,12 @@ def parse_info_line(line: str, game: Game):
         "usedh": "usedh",
         "wp": "winningPitcher",
         "lp": "losingPitcher",
-        "save": "sv",
+        "save": "save",
     }
     parts = line.split(",")
     try:
         part2 = None if parts[2] == "" else parts[2]
-        game.setValue(mapping[parts[1]], part2)
+        game[mapping[parts[1]]] = part2
     except:
         pass
 
@@ -161,43 +169,65 @@ def parse_id_line(line: str):
     return line.strip().split(",")[1]
 
 
-def parse_start_and_sub_line(line: str, home_away: tuple, inning: int):
+def parse_start_line(line: str, home_away: tuple):
     """
-    With the below details, add the appropriate fields to a new PlayerActivity row object and return it.
+    With the below details, add the appropriate fields to a new Start object and return it.
 
     1. The first field is the Retrosheet player id, which is unique for each player.
 
-    2. The second field is the player's name.
-
-    3. The next field is either 0 (for visiting team), or 1 (for home team).
+    2. The next field is either 0 (for visiting team), or 1 (for home team).
         In some games, typically due to scheduling conflicts, the home team (the team whose stadium the game is played in)
         bats first (in the top of the innings) and the visiting team bats second (in the bottom of the innings).
         In these games, contrary to "normal" games, start records for the home team ("1") precede start records for the visiting team ("0").
         Similarly, the play codes pertaining to the home team ("1") precede the play codes pertaining to the visiting team ("0").
 
-    4. The next field is the position in the batting order, 1 - 9.
+    3. The next field is the position in the batting order, 1 - 9.
         When a game is played using the DH rule the pitcher is given the batting order position 0.
 
-    5. The last field is the fielding position.
+    4. The last field is the fielding position.
+        The numbers are in the standard notation, with designated hitters being identified as position 10.
+    """
+    parts = line.split(",")
+    start = Start()
+
+    start["player"] = parts[1]
+    start["team"] = home_away[int(parts[3])]
+    start["battingPos"] = int(parts[4])
+    start["fieldingPos"] = int(parts[5])
+    return start
+
+def parse_sub_line(line: str, home_away: tuple, inning: int):
+    """
+    With the below details, add the appropriate fields to a new Start object and return it.
+
+    1. The first field is the Retrosheet player id, which is unique for each player.
+
+    2. The next field is either 0 (for visiting team), or 1 (for home team).
+        In some games, typically due to scheduling conflicts, the home team (the team whose stadium the game is played in)
+        bats first (in the top of the innings) and the visiting team bats second (in the bottom of the innings).
+        In these games, contrary to "normal" games, start records for the home team ("1") precede start records for the visiting team ("0").
+        Similarly, the play codes pertaining to the home team ("1") precede the play codes pertaining to the visiting team ("0").
+
+    3. The next field is the position in the batting order, 1 - 9.
+        When a game is played using the DH rule the pitcher is given the batting order position 0.
+
+    4. The last field is the fielding position.
         The numbers are in the standard notation, with designated hitters being identified as position 10.
         On sub records 11 indicates a pinch hitter and 12 is used for a pinch runner.
         When a player pinch hits or pinch runs for the DH, that player automatically becomes the DH,
         so no 'sub' record is included to identify the new DH.
     """
     parts = line.split(",")
-    act = PlayerActivity()
-    global PLAY_ACT_ID
-    act.setValue("id", PLAY_ACT_ID)
-    PLAY_ACT_ID += 1
+    sub = Sub()
 
-    act.setValue("playerId", parts[1])
-    act.setValue("team", home_away[int(parts[3])])
-    act.setValue("inning", inning)
-    act.setValue("battingPos", int(parts[4]))
-    act.setValue("fieldingPos", int(parts[5]))
-    act.setValue("pinchHit", int(parts[5]) == 11)
-    act.setValue("pinchRun", int(parts[5]) == 12)
-    return act
+    sub["player"] = parts[1]
+    sub["team"] = home_away[int(parts[3])]
+    sub["battingPos"] = int(parts[4])
+    sub["fieldingPos"] = int(parts[5])
+    sub["inning"] = inning
+    sub["pinchHit"] = int(parts[5]) == 11
+    sub["pinchRun"] = int(parts[5]) == 12
+    return sub
 
 
 def parse_play_line(line: str, home_away: tuple) -> AtBat:
@@ -223,18 +253,18 @@ def parse_play_line(line: str, home_away: tuple) -> AtBat:
     atBat = AtBat()
     parts = line.split(",")
 
-    atBat.setValue("inning", int(parts[1]))
+    atBat["inning"] = int(parts[1])
     if parts[6] == "NP":
         return atBat
-    atBat.setValue("team", home_away[int(parts[2])])
-    atBat.setValue("top_bottom", ["T", "B"][int(parts[2])])
-    atBat.setValue("batter", parts[3])
-    atBat.setValue("pitches", parts[5])
+    atBat["team"] = home_away[int(parts[2])]
+    atBat["top_bottom"] = ["T", "B"][int(parts[2])]
+    atBat["batter"] = parts[3]
+    atBat["pitches"] = parts[5]
     play = parts[6].split("/")
-    atBat.setValue("play", play[0])
+    atBat["play"] = play[0]
     baserun_split = play[-1].split(".")
     if len(baserun_split) > 1:
-        atBat.setValue("baserunnerDetails", baserun_split[1])
+        atBat["baserunnerDetails"] = baserun_split[1]
     play[-1] = baserun_split[0]
-    atBat.setValue("playDetails", "/".join(play[1:]))
+    atBat["playDetails"] = "/".join(play[1:])
     return atBat

@@ -6,7 +6,7 @@ How to start locally in terminal:
     MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=adminpass mongo:latest
 """
 
-from pymongo import MongoClient, ConnectionFailure
+from pymongo import MongoClient
 
 
 def connect_to_mongo():
@@ -16,20 +16,18 @@ def connect_to_mongo():
     Example usage: client, db = connect_to_mongo()
     """
 
-    uri = "mongodb://admin:adminpass@localhost:27017/"
-    db_name = "mongodb"
+    uri = "mongodb://localhost:27017/"
+    db_name = "baseballdb"
 
     try:
         client = MongoClient(uri)
-        client.admin.command("ping")
-        print("[MongoDB] Connected successfully.")
 
         db = client[db_name]
         print(f"Using database: {db_name}")
         return client, db
 
-    except ConnectionFailure as e:
-        print("[MongoDB] Connection failed:", e)
+    except:
+        print("[MongoDB] Connection failed:")
         raise
 
 def connect_to_postgres():

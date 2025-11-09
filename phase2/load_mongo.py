@@ -29,18 +29,28 @@ def main():
         db.create_collection("Games")
 
     # Load static Ballpark, Player, and Team data
-    ballpark_df = parse_csv("../data/ballparks.csv")
-    ballparks = df_to_ballparks(ballpark_df)
-    db["Ballparks"].insert_many(ballparks)
+    # ballpark_df = parse_csv("../data/ballparks.csv")
+    # ballparks = df_to_ballparks(ballpark_df)
+    # db["Ballparks"].insert_many(ballparks)
 
-    player_df = parse_csv("../data/biofile/biofile.csv")
-    players = df_to_players(player_df)
-    db["Players"].insert_many(players)
+    # player_df = parse_csv("../data/biofile/biofile.csv")
+    # players = df_to_players(player_df)
+    # db["Players"].insert_many(players)
 
-    team_df = parse_csv("../data/teams.csv")
-    teams = df_to_teams(team_df)
-    db["Teams"].insert_many(teams)
+    # team_df = parse_csv("../data/teams.csv")
+    # teams = df_to_teams(team_df)
+    # db["Teams"].insert_many(teams)
 
-    print("Static data loaded successfully.")
+    # print("Static data loaded successfully.")
+
+    # Find event files, parse each, and insert the resulting documents into the database
+    data_dir = "../data/eventFiles"
+    all_files = rec_read(data_dir)
+    for filepath in all_files:
+        games = parse_event_file(filepath)
+        db["Games"].insert_many(games)
 
     client.close()
+
+if __name__ == "__main__":
+    main()
