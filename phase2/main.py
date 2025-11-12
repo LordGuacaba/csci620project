@@ -3,11 +3,11 @@ Main program file for running db loading code.
 Data files should be placed in ../data from root directory
 """
 
-from time import time
-from phase2.db.config import connect_to_mongo
-from phase1.db import db as rdb
-from csci620project.phase2.db import mongo as mdb
+import time
+import db.postgres as rdb
+from db.config import connect_to_mongo
 import pandas as pd
+import psycopg2
 
 
 def get_pda_dataframe(unindexed_results, indexed_results):
@@ -105,9 +105,8 @@ def main():
     print(df)
 
     # 5. discover functional dependencies in rdb
-    fds = rdb.discover_fds()
-    print("Discovered FDs:", fds)
-    # 6. ????normalize rdb based on discovered fds????
+    # this is achieved in phase2/discover_fds.py
+    # results are output to phase2_fd_results.csv and phase2_fd_results.txt
 
 
 if __name__ == "__main__":
