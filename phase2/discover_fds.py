@@ -1,119 +1,156 @@
-import itertools
+import time
+from itertools import combinations
 import pandas as pd
 import psycopg2
 
 
-def discover_all_fds(table_name, max_level=None):
-    """
-    Discover all functional dependencies that hold in a table using the lattice method.
+DB_PARAMS = dict(
+    host="localhost",
+    dbname="baseball_db",
+    user="postgres",
+    password="$nax459:)",
+)
 
-    Args:
-        table_name (str): name of the table in the DB
-        max_level (int): optional limit for lattice depth (useful for large tables)
 
-    Returns:
-        list of tuples (X, Y) where X -> Y
-    """
-    params = dict(
-        host="localhost",
-        dbname="baseball_db",
-        user="postgres",
-        password="$nax459:)",
-    )
+def build_single_column_partitions(df):
+    partitions = {}
+    for col in df.columns:
+        groups = df.groupby(col, dropna=False, sort=False).groups
+        partitions[col] = [set(idx_list.tolist()) for idx_list in groups.values()]
+    return partitions
 
-    print(f"\n=== Discovering FDs for table: {table_name} ===")
+
+def compute_partition_for_alpha(df, alpha):
+    groups = df.groupby(list(alpha), dropna=False, sort=False).groups
+    return [set(idx_list.tolist()) for idx_list in groups.values()]
+
+
+def partition_refines(partition_alpha, partition_b):
+    rhs_id = {}
+    for idx, block in enumerate(partition_b):
+        for r in block:
+            rhs_id[r] = idx
+
+    for block_a in partition_alpha:
+        it = iter(block_a)
+        first = next(it, None)
+        if first is None:
+            continue
+        bid = rhs_id[first]
+        for r in it:
+            if rhs_id[r] != bid:
+                return False
+    return True
+
+
+def generate_next_level(prev_level):
+    next_level = []
+    prev_sorted = sorted([tuple(sorted(alpha)) for alpha in prev_level])
+
+    for i in range(len(prev_sorted)):
+        for j in range(i + 1, len(prev_sorted)):
+            L1 = prev_sorted[i]
+            L2 = prev_sorted[j]
+
+            if L1[:-1] == L2[:-1]:
+                cand = tuple(sorted(set(L1) | set(L2)))
+                next_level.append(cand)
+
+    return list(dict.fromkeys(next_level))
+
+
+def discover_functional_dependencies_lattice_pruning(
+    table_name, max_level=None, db_params=None
+):
+    params = db_params or DB_PARAMS
+
+    print(f"\ndiscovering fds for table: {table_name}")
 
     conn = psycopg2.connect(**params)
-    # get all data from the table into a DataFrame
     df = pd.read_sql(f"SELECT * FROM {table_name}", conn)
     conn.close()
 
-    all_attrs = set(df.columns)
-    all_fds = []
-    level = 1
+    if df.empty:
+        return []
 
-    # lattice traversal
-    while level <= len(all_attrs):
-        subsets = list(itertools.combinations(all_attrs, level))
-        if max_level and level > max_level:
+    df = df.fillna("<NULL>")
+    attrs = df.columns.tolist()
+
+    single_partitions = build_single_column_partitions(df)
+
+    fds = []
+    fds_set = set()
+
+    current_level = [(a,) for a in attrs]
+    level_num = 1
+
+    while current_level:
+        print(
+            f"\n-- level {level_num} ({len(current_level)} attribute sets) ------------------"
+        )
+
+        next_level = []
+
+        for alpha in current_level:
+            alpha_set = set(alpha)
+            partition_alpha = compute_partition_for_alpha(df, alpha)
+
+            for b in attrs:
+                if b in alpha_set:
+                    continue
+
+                skip = False
+                for r in range(1, len(alpha)):
+                    for beta in combinations(alpha, r):
+                        if (tuple(sorted(beta)), b) in fds_set:
+                            skip = True
+                            break
+                    if skip:
+                        break
+                if skip:
+                    continue
+
+                partition_b = single_partitions[b]
+
+                if partition_refines(partition_alpha, partition_b):
+                    fds.append((alpha, b))
+                    fds_set.add((tuple(sorted(alpha)), b))
+                    print(f"FD FOUND: {alpha} -> {b}")
+
+            next_level.append(alpha)
+
+        if max_level and level_num >= max_level:
             break
-        print(f"\nlevel {level} ({len(subsets)} subsets")
 
-        for subset in subsets:
-            X = set(subset)
-            closure = compute_closure(df, X, all_attrs)
-            new_deps = closure - X
-            for Y in new_deps:
-                all_fds.append((tuple(sorted(X)), Y))
-                print(f"  {'{' + ', '.join(X) + '}'} → {Y}")
+        current_level = generate_next_level(current_level)
+        level_num += 1
 
-        level += 1
-
-    print(f"\n Found {len(all_fds)} total FDs in {table_name}")
-    return all_fds
+    return fds
 
 
-def compute_closure(df, X, all_attrs):
-    """
-    Compute the closure of attribute set X in DataFrame df.
-    Args:
-        df (pd.DataFrame): data table
-        X (set): set of attributes
-        all_attrs (set): all attributes in the table
-    """
-    closure = set(X)
-    changed = True
-    while changed:
-        changed = False
-        for Y in all_attrs - closure:
-            grouped = df.groupby(list(closure))[Y].nunique(dropna=False)
-            if grouped.max() == 1:
-                closure.add(Y)
-                changed = True
-    return closure
+def write_fd_output(table_name, fds):
+    filename = f"fds_{table_name}.txt"
+    with open(filename, "w") as f:
+        f.write(f"fds for table: {table_name}\n")
+        f.write("=" * 70 + "\n\n")
+
+        if not fds:
+            f.write("(No functional dependencies found)\n")
+            return
+
+        for alpha, b in fds:
+            lhs_str = ", ".join(alpha)
+            f.write(f"{lhs_str} -> {b}\n")
+
+    print(f"saved {filename}")
 
 
 def main():
-    tables_to_check = ["Teams", "Players", "Ballparks", "Games", "PlayerActivity"]
+    tables = ["Teams", "Players", "Ballparks", "Games", "PlayerActivity"]
 
-    fd_summary = {}
-
-    for table in tables_to_check:
-        fds = discover_all_fds(table)
-        fd_summary[table] = fds
-
-    # WRITE RESULTS
-    output_rows = []
-    for table, fds in fd_summary.items():
-        for lhs, rhs in fds:
-            output_rows.append(
-                {"Table": table, "Determinant": ", ".join(lhs), "Dependent": rhs}
-            )
-
-    # save as csv
-    df = pd.DataFrame(output_rows)
-    output_path = "phase2_fd_results.csv"
-    df.to_csv(output_path, index=False)
-    print(f"\nsaved all fd results to {output_path}")
-
-    # write as readable text
-    with open("phase2_fd_results.txt", "w") as f:
-        for table, fds in fd_summary.items():
-            f.write(f"\nTable: {table}\n")
-            if fds:
-                for lhs, rhs in fds:
-                    f.write(f"  {', '.join(lhs)} → {rhs}\n")
-            else:
-                f.write("  no fds\n")
-
-    print("also wrote human readable results to phase2_fd_results.txt")
-
-    # summary printout
-    print("\nfunctional dependency summary")
-    for table, fds in fd_summary.items():
-        print(f"\ntable: {table} ({len(fds)} fds)")
-        for lhs, rhs in fds:
-            print(f"  {', '.join(lhs)} → {rhs}")
+    for table in tables:
+        fds = discover_functional_dependencies_lattice_pruning(table)
+        write_fd_output(table, fds)
 
 
 if __name__ == "__main__":
