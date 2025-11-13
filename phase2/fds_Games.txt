@@ -1,0 +1,58 @@
+fds for table: Games
+======================================================================
+
+id -> hometeam
+id -> visteam
+id -> date
+id -> location
+id -> usedh
+id -> htbf
+id -> attendance
+id -> winningpitcher
+id -> losingpitcher
+id -> sv
+date, hometeam -> location
+date, hometeam -> usedh
+date, losingpitcher -> htbf
+date, visteam -> hometeam
+date, visteam -> location
+date, visteam -> usedh
+date, winningpitcher -> htbf
+attendance, date, hometeam -> visteam
+attendance, date, location -> hometeam
+attendance, date, location -> visteam
+attendance, date, location -> usedh
+attendance, date, losingpitcher -> id
+attendance, date, losingpitcher -> hometeam
+attendance, date, losingpitcher -> visteam
+attendance, date, losingpitcher -> location
+attendance, date, losingpitcher -> usedh
+attendance, date, losingpitcher -> winningpitcher
+attendance, date, losingpitcher -> sv
+attendance, date, winningpitcher -> hometeam
+attendance, date, winningpitcher -> visteam
+attendance, date, winningpitcher -> location
+attendance, date, winningpitcher -> usedh
+date, hometeam, losingpitcher -> visteam
+date, hometeam, sv -> visteam
+date, hometeam, winningpitcher -> visteam
+date, location, losingpitcher -> hometeam
+date, location, losingpitcher -> visteam
+date, location, losingpitcher -> usedh
+date, location, sv -> hometeam
+date, location, sv -> visteam
+date, location, sv -> usedh
+date, location, usedh -> hometeam
+date, location, winningpitcher -> hometeam
+date, location, winningpitcher -> visteam
+date, location, winningpitcher -> usedh
+attendance, hometeam, losingpitcher, visteam -> htbf
+attendance, hometeam, losingpitcher, winningpitcher -> htbf
+attendance, location, losingpitcher, visteam -> htbf
+attendance, location, losingpitcher, winningpitcher -> htbf
+attendance, losingpitcher, visteam, winningpitcher -> usedh
+attendance, losingpitcher, visteam, winningpitcher -> htbf
+hometeam, losingpitcher, sv, winningpitcher -> htbf
+location, losingpitcher, sv, winningpitcher -> htbf
+losingpitcher, sv, visteam, winningpitcher -> htbf
+attendance, location, losingpitcher, sv, visteam, winningpitcher -> hometeam

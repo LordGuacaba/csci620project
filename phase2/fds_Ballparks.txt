@@ -1,0 +1,8 @@
+fds for table: Ballparks
+======================================================================
+
+id -> name
+id -> city
+id -> state
+city, name -> id
+city, name -> state

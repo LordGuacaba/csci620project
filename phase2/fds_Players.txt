@@ -1,0 +1,9 @@
+fds for table: Players
+======================================================================
+
+id -> firstname
+id -> lastname
+id -> dob
+id -> bats
+id -> throws
+dob, firstname, lastname, throws -> bats

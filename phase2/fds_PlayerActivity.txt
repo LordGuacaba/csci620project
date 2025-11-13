@@ -1,0 +1,20 @@
+fds for table: PlayerActivity
+======================================================================
+
+id -> gameid
+id -> playerid
+id -> team
+id -> battingpos
+id -> fieldingpos
+id -> inning
+id -> pinchhit
+id -> pinchrun
+gameid -> inning
+playerid -> inning
+team -> inning
+battingpos -> inning
+fieldingpos -> inning
+fieldingpos -> pinchhit
+fieldingpos -> pinchrun
+pinchhit -> inning
+pinchrun -> inning

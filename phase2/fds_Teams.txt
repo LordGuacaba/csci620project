@@ -1,0 +1,9 @@
+fds for table: Teams
+======================================================================
+
+id -> city
+id -> name
+id -> first
+id -> last
+city, first, name -> last
+city, last, name -> first
