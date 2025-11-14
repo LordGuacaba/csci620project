@@ -39,3 +39,10 @@ and count(case when play like 'HR%' then 1 end) >= 1
 order by g.date;
 
 -- indexes used:
+CREATE INDEX idx_atbats_game ON atbats(game);
+CREATE INDEX idx_atbats_batter ON atbats(batter);
+CREATE INDEX idx_atbats_play ON atbats(play);
+CREATE INDEX idx_atbats_game_trgm ON atbats USING gin (game gin_trgm_ops);
+CREATE INDEX idx_playeractivity_gameid ON playeractivity(gameid);
+CREATE INDEX idx_playeractivity_playerid ON playeractivity(playerid);
+CREATE INDEX idx_playeractivity_fieldingpos ON playeractivity(fieldingpos);
