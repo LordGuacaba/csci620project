@@ -146,10 +146,10 @@ def write_fd_output(table_name, fds):
 
 
 def main():
-    tables = ["Teams", "Players", "Ballparks", "Games", "PlayerActivity"]
+    tables = ["AtBats"]
 
     for table in tables:
-        fds = discover_functional_dependencies_lattice_pruning(table)
+        fds = discover_functional_dependencies_lattice_pruning(table, max_level=3)
         write_fd_output(table, fds)
 
 

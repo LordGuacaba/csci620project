@@ -72,6 +72,7 @@ class PlayerActivity(Relation):
                 "team",
                 "battingPos",
                 "fieldingPos",
+                "inning",
                 "pinchHit",
                 "pinchRun",
             ),

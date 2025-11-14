@@ -120,9 +120,19 @@ def parse_event_file(file_path):
                     line,
                     (current_game.values["visteam"], current_game.values["hometeam"]),
                 )
-                current_inning = at_bat.values["inning"]
-                if at_bat.values["play"] == None:
+
+                # Skip malformed lines entirely
+                if at_bat is None:
                     continue
+
+                # Update inning only if valid
+                if at_bat.values.get("inning") is not None:
+                    current_inning = at_bat.values["inning"]
+
+                # Skip plays with no action
+                if at_bat.values["play"] is None:
+                    continue
+
                 at_bat.setValue("num", play_num)
                 play_num += 1
                 at_bat.setValue("game", current_game.values["id"])
@@ -224,18 +234,31 @@ def parse_play_line(line: str, home_away: tuple) -> AtBat:
     atBat = AtBat()
     parts = line.split(",")
 
-    atBat.setValue("inning", int(parts[1]))
+    try:
+        inning = int(parts[1])
+    except:
+        # malformed play line -> keep previous inning (handled in caller)
+        return None
+
+    atBat.setValue("inning", inning)
+
+    # NP means: no play, but inning is valid
     if parts[6] == "NP":
+        atBat.setValue("play", None)
         return atBat
+
     atBat.setValue("team", home_away[int(parts[2])])
     atBat.setValue("top_bottom", ["T", "B"][int(parts[2])])
     atBat.setValue("batter", parts[3])
     atBat.setValue("pitches", parts[5])
+
     play = parts[6].split("/")
-    atBat.setValue("play", play[0])
+    atBat.setValue("play", play[0] if play[0] != "" else None)
+
     baserun_split = play[-1].split(".")
     if len(baserun_split) > 1:
         atBat.setValue("baserunnerDetails", baserun_split[1])
     play[-1] = baserun_split[0]
     atBat.setValue("playDetails", "/".join(play[1:]))
+
     return atBat

@@ -1,0 +1,25 @@
+fds for table: AtBats
+======================================================================
+
+num -> playdetails
+num -> baserunnerdetails
+game -> playdetails
+game -> baserunnerdetails
+batter -> playdetails
+batter -> baserunnerdetails
+inning -> playdetails
+inning -> baserunnerdetails
+top_bottom -> playdetails
+top_bottom -> baserunnerdetails
+pitches -> playdetails
+pitches -> baserunnerdetails
+play -> playdetails
+play -> baserunnerdetails
+playdetails -> baserunnerdetails
+baserunnerdetails -> playdetails
+batter, game -> top_bottom
+game, num -> batter
+game, num -> inning
+game, num -> top_bottom
+game, num -> pitches
+game, num -> play
