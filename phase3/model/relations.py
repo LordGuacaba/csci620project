@@ -1,0 +1,98 @@
+"""
+This module provides a class definition for a generic relation row in a database and defines several child classes
+useful to our project. Relation instances can be passed generically into certain functions in the db loading program
+that greatly simplify the execution and understanding of parsing and insertion code.
+"""
+
+
+class Relation:
+
+    def __init__(self, name, cols: tuple[str]):
+        self.name = name
+        self.cols = cols
+        self.values = {colName: None for colName in cols}
+
+    def getValues(self):
+        return [self.values[colName] for colName in self.cols]
+
+    def setValue(self, col: str, value):
+        self.values[col] = value
+
+
+class Game(Relation):
+
+    def __init__(self):
+        super().__init__(
+            "Games",
+            (
+                "id",
+                "hometeam",
+                "visteam",
+                "date",
+                "location",
+                "usedh",
+                "htbf",
+                "attendance",
+                "winningPitcher",
+                "losingPitcher",
+                "sv",
+            ),
+        )
+
+
+class Ballpark(Relation):
+
+    def __init__(self):
+        super().__init__("Ballparks", ("id", "name", "city", "state"))
+
+
+class Team(Relation):
+
+    def __init__(self):
+        super().__init__("Teams", ("id", "city", "name", "first", "last"))
+
+
+class Player(Relation):
+
+    def __init__(self):
+        super().__init__(
+            "Players", ("id", "firstname", "lastname", "DOB", "bats", "throws")
+        )
+
+
+class PlayerActivity(Relation):
+
+    def __init__(self):
+        super().__init__(
+            "PlayerActivity",
+            (
+                "id",
+                "gameId",
+                "playerId",
+                "team",
+                "battingPos",
+                "fieldingPos",
+                "inning",
+                "pinchHit",
+                "pinchRun",
+            ),
+        )
+
+
+class AtBat(Relation):
+
+    def __init__(self):
+        super().__init__(
+            "AtBats",
+            (
+                "num",
+                "game",
+                "batter",
+                "inning",
+                "top_bottom",
+                "pitches",
+                "play",
+                "playDetails",
+                "baserunnerDetails",
+            ),
+        )
