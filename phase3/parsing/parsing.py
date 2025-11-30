@@ -259,6 +259,8 @@ def parse_play_line(line: str, home_away: tuple) -> AtBat:
     atBat.setValue("batter", parts[3])
     atBat.setValue("pitches", parts[5])
 
+    # some older games have plays with baserunner info but no slash like S8.3-H;2-H;1-3;B-2(E8)
+    # hence the no slash case
     play = parts[6].split("/")
     if len(play) > 1:
         atBat.setValue("play", play[0] if play[0] != "" else None)
