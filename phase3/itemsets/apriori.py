@@ -1,11 +1,13 @@
 import sys
+import time
 import pandas as pd
 from phase3.db.config import connect
 from collections import defaultdict
-import time
 from itertools import combinations
 
-
+MIN_PITCHES = 100_000
+MIN_POSITIONS = 8000
+MIN_COMBOS = 500
 def generate_rules(all_itemsets, num_transactions, min_confidence=0.1):
     """
     Generate association rules from the frequent itemsets produced by Apriori.
@@ -320,24 +322,24 @@ def main():
     player_combos = long_lived_player_combos(player_activities)
 
     # apriori algorithm implementation
-    pitch_itemsets = full_apriori(frequent_pitches, min_support, max_k=4)
+    pitch_itemsets = full_apriori(frequent_pitches, min_support=MIN_PITCHES, max_k=4)
     write_itemsets_to_file(pitch_itemsets, filename_prefix="pitch_itemsets")
     pitch_rules = generate_rules(
-        pitch_itemsets, num_transactions=len(frequent_pitches), min_confidence=0.2
+        pitch_itemsets, num_transactions=len(frequent_pitches), min_confidence=0.7
     )
     write_rules_to_file(pitch_rules, "pitch_rules")
 
-    position_itemsets = full_apriori(common_positions, min_support, max_k=4)
+    position_itemsets = full_apriori(common_positions, min_support=MIN_POSITIONS, max_k=4)
     write_itemsets_to_file(position_itemsets, filename_prefix="position_itemsets")
     position_rules = generate_rules(
-        position_itemsets, num_transactions=len(common_positions), min_confidence=0.2
+        position_itemsets, num_transactions=len(common_positions), min_confidence=0.7
     )
     write_rules_to_file(position_rules, "position_rules")
 
-    combo_itemsets = full_apriori(player_combos, min_support, max_k=4)
+    combo_itemsets = full_apriori(player_combos, min_support=MIN_COMBOS, max_k=3)
     write_itemsets_to_file(combo_itemsets, filename_prefix="combo_itemsets")
     combo_rules = generate_rules(
-        combo_itemsets, num_transactions=len(player_combos), min_confidence=0.2
+        combo_itemsets, num_transactions=len(player_combos), min_confidence=0.7
     )
     write_rules_to_file(combo_rules, "combo_rules")
 
