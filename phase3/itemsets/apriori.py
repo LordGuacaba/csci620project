@@ -3,6 +3,94 @@ import pandas as pd
 from phase3.db.config import connect
 from collections import defaultdict
 import time
+from itertools import combinations
+
+
+def generate_rules(all_itemsets, num_transactions, min_confidence=0.1):
+    """
+    Generate association rules from the frequent itemsets produced by Apriori.
+
+    Parameters:
+    - all_itemsets: dict mapping level k → { itemset: support }
+    - min_confidence: minimum confidence threshold (float)
+
+    Returns:
+    - rules: list of dicts {X, Y, support, confidence, lift}
+    """
+
+    # Flatten all itemsets into a single support lookup
+    support_lookup = {}
+    for level in all_itemsets.values():
+        for itemset, sup in level.items():
+            support_lookup[itemset] = sup
+
+    rules = []
+
+    for itemset, itemset_support in support_lookup.items():
+
+        # itemsets of size >= 2
+        if len(itemset) < 2:
+            continue
+
+        items = list(itemset)
+
+        # X is any nonempty proper subset
+        # Y = itemset - X
+        # for all possible sizes of X
+        for r in range(1, len(items)):
+            # all combinations of size r
+            for X_tuple in combinations(items, r):
+                X = frozenset(X_tuple)
+                Y = itemset - X
+
+                support_X = support_lookup.get(X, None)
+                support_Y = support_lookup.get(Y, None)
+
+                # If the subset was not in the frequent itemsets, skip
+                if support_X is None or support_Y is None:
+                    continue
+
+                confidence = itemset_support / support_X
+                lift = confidence / (support_Y / num_transactions)
+
+                if confidence >= min_confidence:
+                    rules.append(
+                        {
+                            "X": X,
+                            "Y": Y,
+                            "support": itemset_support,
+                            "confidence": confidence,
+                            "lift": lift,
+                        }
+                    )
+
+    # sort by lift desc, then confidence desc
+    rules.sort(key=lambda r: (-r["lift"], -r["confidence"]))
+
+    return rules
+
+
+def write_rules_to_file(rules, filename_prefix="association_rules"):
+    """
+    Write association rules to an output text file.
+    """
+
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
+    filename = f"{filename_prefix}_{timestamp}.txt"
+
+    with open(filename, "w") as f:
+        for rule in rules:
+            X = ", ".join(sorted(rule["X"]))
+            Y = ", ".join(sorted(rule["Y"]))
+            f.write(
+                f"{X}  -->  {Y}  "
+                f"(support={rule['support']}, "
+                f"confidence={rule['confidence']:.3f}, "
+                f"lift={rule['lift']:.3f})\n"
+            )
+
+    print(f"Saved association rules to: {filename}")
+    return filename
 
 
 def progress_bar(current, total, prefix="", length=40):
@@ -67,7 +155,7 @@ def generate_candidates(Lk):
     return candidates
 
 
-def full_apriori(transactions, min_support):
+def full_apriori(transactions, min_support, max_k=None):
     """
     Full Apriori algorithm to find all frequent itemsets in the given transactions.
     Parameters:
@@ -97,6 +185,10 @@ def full_apriori(transactions, min_support):
     # Lk
     while True:
         k += 1
+
+        # stop if max_k reached
+        if max_k is not None and k > max_k:
+            break
 
         # Ck candidate generation
         ck = generate_candidates(all_levels[k - 1])
@@ -223,17 +315,31 @@ def main():
     conn.close()
 
     # transactions
-    frequent_pitchs = frequent_pitch_transactions(at_bats)
+    frequent_pitches = frequent_pitch_transactions(at_bats)
     common_positions = common_position_groups(player_activities)
     player_combos = long_lived_player_combos(player_activities)
 
     # apriori algorithm implementation
-    pitch_itemsets = full_apriori(frequent_pitchs, min_support)
+    pitch_itemsets = full_apriori(frequent_pitches, min_support, max_k=4)
     write_itemsets_to_file(pitch_itemsets, filename_prefix="pitch_itemsets")
-    position_itemsets = full_apriori(common_positions, min_support)
+    pitch_rules = generate_rules(
+        pitch_itemsets, num_transactions=len(frequent_pitches), min_confidence=0.2
+    )
+    write_rules_to_file(pitch_rules, "pitch_rules")
+
+    position_itemsets = full_apriori(common_positions, min_support, max_k=4)
     write_itemsets_to_file(position_itemsets, filename_prefix="position_itemsets")
-    combo_itemsets = full_apriori(player_combos, min_support)
+    position_rules = generate_rules(
+        position_itemsets, num_transactions=len(common_positions), min_confidence=0.2
+    )
+    write_rules_to_file(position_rules, "position_rules")
+
+    combo_itemsets = full_apriori(player_combos, min_support, max_k=4)
     write_itemsets_to_file(combo_itemsets, filename_prefix="combo_itemsets")
+    combo_rules = generate_rules(
+        combo_itemsets, num_transactions=len(player_combos), min_confidence=0.2
+    )
+    write_rules_to_file(combo_rules, "combo_rules")
 
 
 if __name__ == "__main__":
