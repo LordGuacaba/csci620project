@@ -1,0 +1,8 @@
+fieldpos_7  -->  fieldpos_11, fieldpos_12  (support=3823, confidence=0.823, lift=2.214)
+fieldpos_11, fieldpos_7  -->  fieldpos_12  (support=3823, confidence=0.846, lift=1.948)
+fieldpos_7  -->  fieldpos_12  (support=3893, confidence=0.838, lift=1.931)
+fieldpos_12, fieldpos_7  -->  fieldpos_11  (support=3823, confidence=0.982, lift=1.893)
+fieldpos_7  -->  fieldpos_11  (support=4520, confidence=0.974, lift=1.877)
+fieldpos_9  -->  fieldpos_11  (support=4112, confidence=0.971, lift=1.871)
+fieldpos_12  -->  fieldpos_11  (support=6637, confidence=0.856, lift=1.651)
+fieldpos_11  -->  fieldpos_12  (support=6637, confidence=0.717, lift=1.651)

@@ -1,0 +1,318 @@
+{'team_CIN'} : 17764
+{'team_NYA'} : 17624
+{'team_CLE'} : 17526
+{'team_CHN'} : 17406
+{'team_SLN'} : 17370
+{'team_PIT'} : 17324
+{'team_CHA'} : 17297
+{'team_BOS'} : 17268
+{'team_PHI'} : 17240
+{'team_DET'} : 17136
+{'team_BAL'} : 11199
+{'team_SFN'} : 10601
+{'team_LAN'} : 10601
+{'team_MIN'} : 10135
+{'team_NYN'} : 9972
+{'team_HOU'} : 9967
+{'team_ATL'} : 9301
+{'team_OAK'} : 9002
+{'team_SDN'} : 8846
+{'team_KCA'} : 8833
+{'team_MIL'} : 8679
+{'team_TEX'} : 8353
+{'team_TOR'} : 7552
+{'team_SEA'} : 7551
+{'team_WS1'} : 7193
+{'team_BRO'} : 7133
+{'team_NY1'} : 6947
+{'team_PHA'} : 6246
+{'team_BSN'} : 5934
+{'team_SLA'} : 5871
+{'team_MON'} : 5702
+{'team_CAL'} : 5058
+{'team_COL'} : 5020
+{'team_ANA'} : 4434
+{'team_ARI'} : 4272
+{'team_TBA'} : 4270
+{'player_rosep001'} : 3562
+{'player_yastc101'} : 3308
+{'player_aaroh101'} : 3245
+{'team_WAS'} : 3136
+{'player_hendr001'} : 3081
+{'player_pujoa001'} : 3080
+{'player_murre001'} : 3026
+{'team_FLO'} : 3010
+{'player_ripkc001'} : 3001
+{'player_bondb001'} : 2986
+{'player_winfd001'} : 2973
+{'player_vizqo001'} : 2968
+{'player_maysw101'} : 2959
+{'player_staur001'} : 2939
+{'player_belta001'} : 2933
+{'player_robib104'} : 2896
+{'player_younr001'} : 2856
+{'player_biggc001'} : 2850
+{'player_kalia101'} : 2834
+{'player_palmr001'} : 2831
+{'player_bainh001'} : 2830
+{'player_jackr001'} : 2820
+{'player_robif103'} : 2808
+{'player_cabrm001'} : 2797
+{'player_musis101'} : 2788
+{'player_rodra001'} : 2784
+{'player_peret001'} : 2777
+{'player_jeted001'} : 2747
+{'player_bretg001'} : 2707
+{'player_nettg001'} : 2700
+{'player_evand001'} : 2687
+{'player_molip001'} : 2683
+{'player_grifk002'} : 2671
+{'player_suzui001'} : 2653
+{'player_morgj001'} : 2648
+{'player_dawsa001'} : 2627
+{'player_ott-m101'} : 2617
+{'player_brocl102'} : 2616
+{'player_evand002'} : 2606
+{'player_aparl101'} : 2601
+{'player_marar101'} : 2592
+{'player_gonzl001'} : 2591
+{'player_mccow101'} : 2588
+{'player_beltc001'} : 2586
+{'player_finls001'} : 2583
+{'player_shefg001'} : 2576
+{'player_smito001'} : 2573
+{'player_thomj002'} : 2543
+{'player_rodri001'} : 2543
+{'player_franj002'} : 2527
+{'player_buckb001'} : 2517
+{'player_gaetg001'} : 2507
+{'player_raint001'} : 2502
+{'player_jonec004'} : 2499
+{'player_fiskc001'} : 2499
+{'player_damoj001'} : 2490
+{'player_concd001'} : 2488
+{'player_willb104'} : 2484
+{'player_banke101'} : 2478
+{'player_pinsv101'} : 2470
+{'player_carer001'} : 2469
+{'player_parkd001'} : 2466
+{'player_mcgrf001'} : 2460
+{'player_simmt001'} : 2456
+{'player_carem101'} : 2443
+{'player_ruthb101'} : 2442
+{'player_fairr101'} : 2441
+{'player_boggw001'} : 2440
+{'player_gwynt001'} : 2440
+{'player_davic001'} : 2436
+{'player_killh102'} : 2435
+{'player_speat101'} : 2430
+{'player_wanep101'} : 2430
+{'player_daviw102'} : 2428
+{'player_abreb001'} : 2425
+{'player_ortid001'} : 2408
+{'player_bellb001'} : 2405
+{'player_schmm001'} : 2404
+{'player_mantm101'} : 2393
+{'player_whitl001'} : 2390
+{'player_alomr001'} : 2379
+{'player_huntt001'} : 2372
+{'player_oliva001'} : 2368
+{'player_clemr101'} : 2366
+{'player_sosas001'} : 2354
+{'player_cruzj001'} : 2353
+{'player_konep001'} : 2349
+{'player_downb001'} : 2344
+{'player_starw101'} : 2340
+{'player_mathe101'} : 2337
+{'player_colle101'} : 2333
+{'player_garvs001'} : 2332
+{'player_campb101'} : 2328
+{'player_whitf001'} : 2324
+{'player_thomf001'} : 2322
+{'player_fox-n101'} : 2314
+{'player_surhb001'} : 2313
+{'player_ramim002'} : 2302
+{'player_kentj001'} : 2298
+{'player_cartg001'} : 2296
+{'player_trama001'} : 2293
+{'player_bayld001'} : 2292
+{'player_rollj001'} : 2275
+{'player_rices101'} : 2269
+{'player_canor001'} : 2267
+{'player_boonb001'} : 2264
+{'player_giamj001'} : 2260
+{'player_speic001'} : 2260
+{'player_galaa001'} : 2257
+{'player_vernm101'} : 2249
+{'player_heltt001'} : 2247
+{'player_bowal001'} : 2247
+{'player_gracm001'} : 2245
+{'player_santr102'} : 2239
+{'player_olerj001'} : 2234
+{'player_andeg001'} : 2228
+{'player_moliy001'} : 2226
+{'player_frisf101'} : 2226
+{'player_butlb001'} : 2213
+{'player_wallt001'} : 2212
+{'player_wheaz101'} : 2207
+{'player_foxxj101'} : 2203
+{'player_randw001'} : 2202
+{'player_mcgew001'} : 2201
+{'player_jonea002'} : 2196
+{'player_ramia001'} : 2194
+{'player_taylt101'} : 2194
+{'player_cartj001'} : 2189
+{'player_cobbt101'} : 2188
+{'player_dykej101'} : 2187
+{'player_sierr001'} : 2186
+{'player_torrj101'} : 2186
+{'player_slaue101'} : 2186
+{'player_russb001'} : 2181
+{'player_larkb001'} : 2180
+{'player_murpd001'} : 2180
+{'player_chamc001'} : 2175
+{'player_tejam001'} : 2171
+{'player_reesp101'} : 2166
+{'player_grism001'} : 2165
+{'player_sandr001'} : 2164
+{'player_hornr101'} : 2163
+{'player_philt001'} : 2161
+{'player_ibanr001'} : 2161
+{'player_fernt001'} : 2158
+{'player_zeilt001'} : 2158
+{'player_bencj101'} : 2158
+{'player_harrt001'} : 2155
+{'player_markn001'} : 2154
+{'player_wilsw001'} : 2154
+{'player_willt103'} : 2153
+{'player_rente001'} : 2152
+{'player_bagwj001'} : 2150
+{'player_appll101'} : 2148
+{'player_guerv001'} : 2147
+{'player_snidd101'} : 2143
+{'player_goslg101'} : 2139
+{'player_mccua001'} : 2127
+{'player_mazeb101'} : 2124
+{'player_cepeo101'} : 2124
+{'player_ashbr101'} : 2120
+{'player_bonib001'} : 2113
+{'player_simma101'} : 2111
+{'player_grimc101'} : 2111
+{'player_clayr001'} : 2108
+{'player_loftk001'} : 2103
+{'player_lee-c001'} : 2099
+{'player_grifk001'} : 2097
+{'player_berry101'} : 2096
+{'player_mcmir101'} : 2092
+{'player_gehrl101'} : 2092
+{'player_cashn101'} : 2089
+{'player_ricej001'} : 2089
+{'player_hernk001'} : 2088
+{'player_kendj001'} : 2085
+{'player_mcrah001'} : 2084
+{'player_singk001'} : 2082
+{'player_santc002'} : 2080
+{'player_ventr001'} : 2079
+{'player_tempg001'} : 2079
+{'player_willb002'} : 2076
+{'player_kessd101'} : 2074
+{'player_gehrc101'} : 2074
+{'player_cey-r001'} : 2073
+{'player_hodgg101'} : 2072
+{'player_may-l101'} : 2071
+{'player_judgj101'} : 2069
+{'player_yoste101'} : 2064
+{'player_bellj001'} : 2063
+{'player_piera001'} : 2059
+{'player_andre001'} : 2059
+{'player_alouf101'} : 2059
+{'player_granc001'} : 2057
+{'player_vottj001'} : 2056
+{'player_marte001'} : 2055
+{'player_cruzn002'} : 2055
+{'player_oneip001'} : 2053
+{'player_hendg001'} : 2048
+{'team_KC1'} : 2045
+{'player_poweb101'} : 2042
+{'player_roles001'} : 2038
+{'player_baked002'} : 2038
+{'player_delgc001'} : 2035
+{'player_scotg102'} : 2034
+{'player_joynw001'} : 2033
+{'player_mattg001'} : 2033
+{'player_freef001'} : 2032
+{'player_hooph101'} : 2029
+{'player_hortw101'} : 2028
+{'player_conij001'} : 2024
+{'player_martt002'} : 2023
+{'player_boyek101'} : 2021
+{'player_bands101'} : 2019
+{'player_cardj101'} : 2017
+{'player_rodra101'} : 2017
+{'player_belam101'} : 2016
+{'player_edmoj001'} : 2011
+{'player_gricb001'} : 2008
+{'player_cedec001'} : 2006
+{'team_MIA'} : 2002
+{'player_dunna001'} : 2001
+{'player_mcins101'} : 2001
+{'player_schor101'} : 2001
+{'player_burke001'} : 2000
+{'player_yastc101', 'team_BOS'} : 3308
+{'team_BAL', 'player_ripkc001'} : 3001
+{'team_BAL', 'player_robib104'} : 2896
+{'team_MIL', 'player_younr001'} : 2856
+{'team_HOU', 'player_biggc001'} : 2850
+{'player_kalia101', 'team_DET'} : 2834
+{'team_SLN', 'player_musis101'} : 2788
+{'player_jeted001', 'team_NYA'} : 2747
+{'team_CIN', 'player_rosep001'} : 2722
+{'player_bretg001', 'team_KCA'} : 2707
+{'team_NY1', 'player_ott-m101'} : 2617
+{'team_BOS', 'player_evand002'} : 2505
+{'player_jonec004', 'team_ATL'} : 2499
+{'team_CIN', 'player_concd001'} : 2488
+{'team_CHN', 'player_banke101'} : 2478
+{'team_SDN', 'player_gwynt001'} : 2440
+{'team_PHI', 'player_schmm001'} : 2404
+{'player_mantm101', 'team_NYA'} : 2393
+{'player_whitl001', 'team_DET'} : 2390
+{'player_clemr101', 'team_PIT'} : 2366
+{'team_PIT', 'player_starw101'} : 2340
+{'player_whitf001', 'team_KCA'} : 2324
+{'player_trama001', 'team_DET'} : 2293
+{'team_SLN', 'player_brocl102'} : 2289
+{'player_konep001', 'team_CHA'} : 2268
+{'team_SFN', 'player_mccow101'} : 2256
+{'team_COL', 'player_heltt001'} : 2247
+{'player_moliy001', 'team_SLN'} : 2226
+{'player_willb104', 'team_CHN'} : 2209
+{'team_LAN', 'player_russb001'} : 2181
+{'team_CIN', 'player_larkb001'} : 2180
+{'player_rices101', 'team_WS1'} : 2174
+{'team_PIT', 'player_carem101'} : 2166
+{'team_CIN', 'player_bencj101'} : 2158
+{'team_BOS', 'player_willt103'} : 2153
+{'team_CHN', 'player_sandr001'} : 2151
+{'team_HOU', 'player_bagwj001'} : 2150
+{'team_CHA', 'player_appll101'} : 2148
+{'team_PIT', 'player_mazeb101'} : 2124
+{'team_BRO', 'player_wheaz101'} : 2122
+{'player_santr102', 'team_CHN'} : 2122
+{'player_reesp101', 'team_BRO'} : 2107
+{'team_SFN', 'player_maysw101'} : 2095
+{'player_berry101', 'team_NYA'} : 2092
+{'player_gehrl101', 'team_NYA'} : 2092
+{'player_rollj001', 'team_PHI'} : 2090
+{'team_BOS', 'player_ricej001'} : 2089
+{'player_fox-n101', 'team_CHA'} : 2079
+{'team_DET', 'player_cabrm001'} : 2077
+{'player_willb002', 'team_NYA'} : 2076
+{'team_DET', 'player_gehrc101'} : 2074
+{'team_PIT', 'player_wanep101'} : 2066
+{'team_CIN', 'player_vottj001'} : 2056
+{'team_SEA', 'player_marte001'} : 2055
+{'player_ruthb101', 'team_NYA'} : 2031
+{'player_bagwj001', 'player_biggc001'} : 2029
+{'team_DET', 'player_cashn101'} : 2018
+{'player_willb104', 'player_santr102'} : 2011

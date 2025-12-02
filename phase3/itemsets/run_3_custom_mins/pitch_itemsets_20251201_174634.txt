@@ -1,0 +1,85 @@
+{'pitch_B'} : 4916422
+{'pitch_X'} : 4883466
+{'pitch_C'} : 3515716
+{'pitch_F'} : 2796380
+{'pitch_S'} : 1908070
+{'pitch_.'} : 893811
+{'pitch_1'} : 445098
+{'pitch_*'} : 300817
+{'pitch_>'} : 300083
+{'pitch_T'} : 121593
+{'pitch_X', 'pitch_B'} : 3187433
+{'pitch_C', 'pitch_B'} : 2720085
+{'pitch_F', 'pitch_B'} : 2326763
+{'pitch_C', 'pitch_X'} : 2175856
+{'pitch_F', 'pitch_X'} : 1662285
+{'pitch_S', 'pitch_B'} : 1527750
+{'pitch_C', 'pitch_F'} : 1516660
+{'pitch_C', 'pitch_S'} : 1042427
+{'pitch_F', 'pitch_S'} : 1022456
+{'pitch_S', 'pitch_X'} : 749340
+{'pitch_.', 'pitch_B'} : 683044
+{'pitch_X', 'pitch_.'} : 572059
+{'pitch_C', 'pitch_.'} : 485354
+{'pitch_F', 'pitch_.'} : 398252
+{'pitch_1', 'pitch_B'} : 350659
+{'pitch_S', 'pitch_.'} : 302248
+{'pitch_*', 'pitch_B'} : 295303
+{'pitch_B', 'pitch_>'} : 262599
+{'pitch_1', 'pitch_X'} : 260839
+{'pitch_1', 'pitch_C'} : 227888
+{'pitch_1', 'pitch_F'} : 209096
+{'pitch_C', 'pitch_*'} : 173395
+{'pitch_C', 'pitch_>'} : 171471
+{'pitch_F', 'pitch_*'} : 167243
+{'pitch_F', 'pitch_>'} : 160262
+{'pitch_X', 'pitch_*'} : 150305
+{'pitch_1', 'pitch_S'} : 131876
+{'pitch_X', 'pitch_>'} : 126410
+{'pitch_S', 'pitch_*'} : 125809
+{'pitch_1', 'pitch_>'} : 110507
+{'pitch_S', 'pitch_>'} : 102398
+{'pitch_C', 'pitch_X', 'pitch_B'} : 1608914
+{'pitch_F', 'pitch_X', 'pitch_B'} : 1353202
+{'pitch_F', 'pitch_C', 'pitch_B'} : 1291552
+{'pitch_F', 'pitch_S', 'pitch_B'} : 863184
+{'pitch_C', 'pitch_S', 'pitch_B'} : 836131
+{'pitch_C', 'pitch_X', 'pitch_F'} : 784012
+{'pitch_S', 'pitch_B', 'pitch_X'} : 592253
+{'pitch_C', 'pitch_S', 'pitch_F'} : 515417
+{'pitch_X', 'pitch_.', 'pitch_B'} : 406164
+{'pitch_C', 'pitch_.', 'pitch_B'} : 394745
+{'pitch_F', 'pitch_.', 'pitch_B'} : 344814
+{'pitch_S', 'pitch_F', 'pitch_X'} : 309532
+{'pitch_C', 'pitch_S', 'pitch_X'} : 275962
+{'pitch_C', 'pitch_X', 'pitch_.'} : 275528
+{'pitch_S', 'pitch_.', 'pitch_B'} : 250788
+{'pitch_C', 'pitch_.', 'pitch_F'} : 223199
+{'pitch_F', 'pitch_X', 'pitch_.'} : 219109
+{'pitch_1', 'pitch_X', 'pitch_B'} : 195323
+{'pitch_1', 'pitch_C', 'pitch_B'} : 186974
+{'pitch_1', 'pitch_F', 'pitch_B'} : 180755
+{'pitch_C', 'pitch_*', 'pitch_B'} : 169967
+{'pitch_C', 'pitch_S', 'pitch_.'} : 168650
+{'pitch_F', 'pitch_S', 'pitch_.'} : 164966
+{'pitch_F', 'pitch_*', 'pitch_B'} : 164431
+{'pitch_C', 'pitch_B', 'pitch_>'} : 150103
+{'pitch_F', 'pitch_B', 'pitch_>'} : 149811
+{'pitch_X', 'pitch_*', 'pitch_B'} : 149599
+{'pitch_1', 'pitch_C', 'pitch_X'} : 122602
+{'pitch_S', 'pitch_*', 'pitch_B'} : 120296
+{'pitch_1', 'pitch_F', 'pitch_X'} : 114837
+{'pitch_S', 'pitch_X', 'pitch_.'} : 111548
+{'pitch_1', 'pitch_S', 'pitch_B'} : 110997
+{'pitch_X', 'pitch_B', 'pitch_>'} : 108935
+{'pitch_1', 'pitch_F', 'pitch_C'} : 105914
+{'pitch_B', 'pitch_C', 'pitch_X', 'pitch_F'} : 668182
+{'pitch_B', 'pitch_C', 'pitch_S', 'pitch_F'} : 431599
+{'pitch_F', 'pitch_S', 'pitch_B', 'pitch_X'} : 268773
+{'pitch_C', 'pitch_S', 'pitch_B', 'pitch_X'} : 226641
+{'pitch_C', 'pitch_X', 'pitch_.', 'pitch_B'} : 215023
+{'pitch_B', 'pitch_C', 'pitch_.', 'pitch_F'} : 195924
+{'pitch_F', 'pitch_X', 'pitch_.', 'pitch_B'} : 186519
+{'pitch_F', 'pitch_S', 'pitch_.', 'pitch_B'} : 143510
+{'pitch_C', 'pitch_S', 'pitch_.', 'pitch_B'} : 139469
+{'pitch_C', 'pitch_X', 'pitch_.', 'pitch_F'} : 108524

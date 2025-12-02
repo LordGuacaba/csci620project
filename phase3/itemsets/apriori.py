@@ -6,8 +6,8 @@ from collections import defaultdict
 from itertools import combinations
 
 MIN_PITCHES = 100_000
-MIN_POSITIONS = 8000
-MIN_COMBOS = 500
+MIN_POSITIONS = 3800
+MIN_COMBOS = 2000 # number of games played
 def generate_rules(all_itemsets, num_transactions, min_confidence=0.1):
     """
     Generate association rules from the frequent itemsets produced by Apriori.
@@ -276,10 +276,6 @@ def common_position_groups(table_df):
         for pos in group["fieldingpos"].dropna().unique():
             tran.append(f"fieldpos_{int(pos)}")
 
-        # Batting positions
-        for pos in group["battingpos"].dropna().unique():
-            tran.append(f"batpos_{int(pos)}")
-
         transactions.append(tran)
 
     return transactions
@@ -336,7 +332,7 @@ def main():
     )
     write_rules_to_file(position_rules, "position_rules")
 
-    combo_itemsets = full_apriori(player_combos, min_support=MIN_COMBOS, max_k=3)
+    combo_itemsets = full_apriori(player_combos, min_support=MIN_COMBOS, max_k=2)
     write_itemsets_to_file(combo_itemsets, filename_prefix="combo_itemsets")
     combo_rules = generate_rules(
         combo_itemsets, num_transactions=len(player_combos), min_confidence=0.7

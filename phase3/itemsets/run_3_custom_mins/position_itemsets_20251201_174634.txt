@@ -1,0 +1,66 @@
+{'batpos_9'} : 15712
+{'batpos_8'} : 11990
+{'batpos_7'} : 11222
+{'batpos_6'} : 10646
+{'batpos_5'} : 9863
+{'batpos_2'} : 9584
+{'fieldpos_1'} : 9358
+{'batpos_1'} : 9302
+{'fieldpos_11'} : 9257
+{'batpos_4'} : 9163
+{'batpos_3'} : 8876
+{'batpos_9', 'batpos_8'} : 11538
+{'batpos_9', 'batpos_7'} : 10838
+{'batpos_6', 'batpos_9'} : 10353
+{'batpos_7', 'batpos_8'} : 9992
+{'batpos_9', 'batpos_5'} : 9664
+{'batpos_6', 'batpos_8'} : 9594
+{'batpos_6', 'batpos_7'} : 9481
+{'batpos_9', 'batpos_2'} : 9386
+{'batpos_9', 'batpos_1'} : 9129
+{'batpos_9', 'fieldpos_11'} : 9028
+{'batpos_4', 'batpos_9'} : 8993
+{'batpos_8', 'batpos_5'} : 8960
+{'batpos_7', 'batpos_5'} : 8864
+{'batpos_8', 'batpos_2'} : 8767
+{'batpos_9', 'batpos_3'} : 8713
+{'batpos_6', 'batpos_5'} : 8691
+{'batpos_7', 'batpos_2'} : 8606
+{'batpos_1', 'batpos_8'} : 8509
+{'batpos_4', 'batpos_8'} : 8441
+{'batpos_6', 'batpos_2'} : 8375
+{'fieldpos_11', 'batpos_8'} : 8354
+{'batpos_4', 'batpos_7'} : 8286
+{'batpos_7', 'batpos_1'} : 8279
+{'batpos_3', 'batpos_8'} : 8175
+{'batpos_6', 'batpos_4'} : 8150
+{'batpos_7', 'fieldpos_11'} : 8056
+{'batpos_7', 'batpos_3'} : 8052
+{'batpos_6', 'batpos_1'} : 8045
+{'batpos_7', 'batpos_9', 'batpos_8'} : 9816
+{'batpos_6', 'batpos_9', 'batpos_8'} : 9459
+{'batpos_6', 'batpos_7', 'batpos_9'} : 9323
+{'batpos_6', 'batpos_7', 'batpos_8'} : 8946
+{'batpos_9', 'batpos_8', 'batpos_5'} : 8878
+{'batpos_9', 'batpos_7', 'batpos_5'} : 8767
+{'batpos_9', 'batpos_8', 'batpos_2'} : 8689
+{'batpos_6', 'batpos_9', 'batpos_5'} : 8604
+{'batpos_9', 'batpos_7', 'batpos_2'} : 8496
+{'batpos_1', 'batpos_9', 'batpos_8'} : 8431
+{'batpos_7', 'batpos_8', 'batpos_5'} : 8404
+{'batpos_4', 'batpos_9', 'batpos_8'} : 8362
+{'batpos_6', 'batpos_9', 'batpos_2'} : 8298
+{'batpos_6', 'batpos_8', 'batpos_5'} : 8266
+{'batpos_6', 'batpos_7', 'batpos_5'} : 8257
+{'fieldpos_11', 'batpos_9', 'batpos_8'} : 8211
+{'batpos_4', 'batpos_7', 'batpos_9'} : 8210
+{'batpos_7', 'batpos_8', 'batpos_2'} : 8204
+{'batpos_1', 'batpos_9', 'batpos_7'} : 8194
+{'batpos_9', 'batpos_3', 'batpos_8'} : 8105
+{'batpos_4', 'batpos_9', 'batpos_6'} : 8077
+{'batpos_6', 'batpos_8', 'batpos_2'} : 8027
+{'batpos_6', 'batpos_7', 'batpos_9', 'batpos_8'} : 8860
+{'batpos_7', 'batpos_9', 'batpos_8', 'batpos_5'} : 8352
+{'batpos_6', 'batpos_9', 'batpos_8', 'batpos_5'} : 8218
+{'batpos_6', 'batpos_9', 'batpos_7', 'batpos_5'} : 8190
+{'batpos_7', 'batpos_9', 'batpos_8', 'batpos_2'} : 8146

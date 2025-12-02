@@ -1,0 +1,10 @@
+{'fieldpos_1'} : 9358
+{'fieldpos_11'} : 9257
+{'fieldpos_12'} : 7750
+{'fieldpos_7'} : 4643
+{'fieldpos_9'} : 4236
+{'fieldpos_11', 'fieldpos_12'} : 6637
+{'fieldpos_11', 'fieldpos_7'} : 4520
+{'fieldpos_11', 'fieldpos_9'} : 4112
+{'fieldpos_7', 'fieldpos_12'} : 3893
+{'fieldpos_11', 'fieldpos_7', 'fieldpos_12'} : 3823
